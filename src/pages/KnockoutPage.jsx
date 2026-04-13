@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { Swords, Trophy, Crown, Users, ArrowRight } from 'lucide-react';
-import { knockoutMatches } from '../data/matches';
+import { Swords, Trophy, Crown, Users, ArrowRight, CheckCircle } from 'lucide-react';
+import { knockoutMatches, getQualifiedPlayers, generateSemiFinals, generateFinalMatch } from '../data/matches';
 import { players, calculateLeaderboard } from '../data/players';
 
 function getTopPlayers(leaderboardData) {
@@ -8,9 +8,11 @@ function getTopPlayers(leaderboardData) {
 }
 
 function MatchCard({ match, stage }) {
+  const isCompleted = match.winner !== null;
+  
   const getStageStyles = (stage) => {
     if (stage === 'Semi Finals') return 'border-purple-500/30 bg-purple-600/10';
-    if (stage === 'Group Finals') return 'border-yellow-500/30 bg-yellow-600/10';
+    if (stage === 'Final') return 'border-yellow-500/30 bg-yellow-600/10';
     return 'border-green-500/30 bg-green-600/10';
   };
 
@@ -21,28 +23,33 @@ function MatchCard({ match, stage }) {
     >
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-medium text-gray-400 uppercase">{stage}</span>
-        <span className={`text-xs px-2 py-1 rounded-full ${
-          match.winner ? 'bg-green-600/30 text-green-400' : 'bg-yellow-600/30 text-yellow-400'
-        }`}>
-          {match.winner ? 'Completed' : 'TBD'}
-        </span>
+        {isCompleted ? (
+          <div className="flex items-center gap-1 text-green-400 text-xs">
+            <CheckCircle size={12} />
+            Completed
+          </div>
+        ) : (
+          <span className="text-xs px-2 py-1 rounded-full bg-yellow-600/30 text-yellow-400">
+            {match.player1 && match.player2 ? 'Scheduled' : 'TBD'}
+          </span>
+        )}
       </div>
       <div className="flex items-center justify-between gap-3">
         <div className="flex-1 text-center">
           <p className={`font-semibold ${match.winner === match.player1 ? 'text-green-400' : 'text-white'}`}>
-            {match.player1}
+            {match.player1 || 'TBD'}
           </p>
         </div>
         <ArrowRight className="text-gray-500" size={20} />
         <div className="flex-1 text-center">
           <p className={`font-semibold ${match.winner === match.player2 ? 'text-green-400' : 'text-white'}`}>
-            {match.player2}
+            {match.player2 || 'TBD'}
           </p>
         </div>
       </div>
-      {match.winner && (
+      {isCompleted && (
         <div className="mt-3 text-center">
-          <p className="text-sm text-green-400">Winner: {match.winner}</p>
+          <p className="text-sm text-green-400 font-semibold">Winner: {match.winner}</p>
         </div>
       )}
     </motion.div>
@@ -65,6 +72,13 @@ export default function KnockoutPage() {
   const topA = getTopPlayers(sortedA);
   const topB = getTopPlayers(sortedB);
 
+  // Auto-generate knockout matches based on qualified players
+  const semiFinalMatches = topA.length >= 2 && topB.length >= 2 
+    ? generateSemiFinals(topA, topB) 
+    : knockoutMatches.semiFinals;
+    
+  const finalMatch = knockoutMatches.final;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -77,7 +91,7 @@ export default function KnockoutPage() {
           <Swords className="text-purple-500" />
           Knockout Stage
         </h1>
-        <p className="text-gray-400">Semi Finals → Group Finals → Grand Final</p>
+        <p className="text-gray-400">Semi Finals → Grand Final</p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -103,7 +117,7 @@ export default function KnockoutPage() {
                   {idx < 2 ? <Crown className="text-white" size={16} /> : <span className="text-white font-bold">{idx + 1}</span>}
                 </div>
                 <span className="font-semibold text-white">{player.name}</span>
-                <span className="ml-auto text-gray-400 text-sm">Score: {((player.wins * 2) + (player.kills / player.matches)).toFixed(2)}</span>
+                <span className="ml-auto text-gray-400 text-sm">Score: {player.finalScore}</span>
               </motion.div>
             ))}
           </div>
@@ -131,7 +145,7 @@ export default function KnockoutPage() {
                   {idx < 2 ? <Crown className="text-white" size={16} /> : <span className="text-white font-bold">{idx + 1}</span>}
                 </div>
                 <span className="font-semibold text-white">{player.name}</span>
-                <span className="ml-auto text-gray-400 text-sm">Score: {((player.wins * 2) + (player.kills / player.matches)).toFixed(2)}</span>
+                <span className="ml-auto text-gray-400 text-sm">Score: {player.finalScore}</span>
               </motion.div>
             ))}
           </div>
@@ -147,7 +161,7 @@ export default function KnockoutPage() {
         <div className="grid lg:grid-cols-3 gap-4">
           <div className="space-y-4">
             <h3 className="text-center font-semibold text-purple-400">Semi Finals</h3>
-            {knockoutMatches.semiFinals.map((match) => (
+            {semiFinalMatches.map((match) => (
               <MatchCard key={match.id} match={match} stage="Semi Finals" />
             ))}
           </div>
@@ -157,10 +171,8 @@ export default function KnockoutPage() {
           </div>
           
           <div className="space-y-4">
-            <h3 className="text-center font-semibold text-yellow-400">Group Final</h3>
-            {knockoutMatches.groupFinals.map((match) => (
-              <MatchCard key={match.id} match={match} stage="Group Final" />
-            ))}
+            <h3 className="text-center font-semibold text-yellow-400">Grand Final</h3>
+            <MatchCard match={finalMatch} stage="Final" />
           </div>
         </div>
       </div>
@@ -168,26 +180,37 @@ export default function KnockoutPage() {
       <div className="glass-card rounded-xl p-6 border-2 border-yellow-500/30">
         <div className="flex items-center gap-3 mb-4">
           <Crown className="text-yellow-500" size={32} />
-          <h2 className="text-2xl font-bold text-white">Grand Final</h2>
+          <h2 className="text-2xl font-bold text-white">Tournament Champion</h2>
         </div>
         <p className="text-gray-400 text-center mb-4">
-          Group A Winner vs Group B Winner
+          Winner of Grand Final
         </p>
-        <div className="flex items-center justify-center gap-8">
-          <div className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-purple-400 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-2xl font-bold text-white">?</span>
+        {finalMatch.winner ? (
+          <div className="flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-24 h-24 bg-gradient-to-br from-yellow-600 to-yellow-400 rounded-full flex items-center justify-center mx-auto mb-2 shadow-lg shadow-yellow-500/30">
+                <Crown className="text-white" size={40} />
+              </div>
+              <p className="text-yellow-400 font-bold text-xl">{finalMatch.winner}</p>
             </div>
-            <p className="text-purple-400 font-semibold">Group A Winner</p>
           </div>
-          <span className="text-3xl text-gray-500">VS</span>
-          <div className="text-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-2">
-              <span className="text-2xl font-bold text-white">?</span>
+        ) : (
+          <div className="flex items-center justify-center gap-8">
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-purple-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-2xl font-bold text-white">?</span>
+              </div>
+              <p className="text-purple-400 font-semibold">SF Winner 1</p>
             </div>
-            <p className="text-blue-400 font-semibold">Group B Winner</p>
+            <span className="text-3xl text-gray-500">VS</span>
+            <div className="text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-400 rounded-full flex items-center justify-center mx-auto mb-2">
+                <span className="text-2xl font-bold text-white">?</span>
+              </div>
+              <p className="text-blue-400 font-semibold">SF Winner 2</p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </motion.div>
   );
