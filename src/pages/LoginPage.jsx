@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { ADMIN_CREDENTIALS } from '../lib/localAuth';
 
 export default function LoginPage() {
   const { login, isAdmin, loading } = useAuth();
@@ -60,7 +59,7 @@ export default function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder={ADMIN_CREDENTIALS.email}
+              placeholder="Enter email"
               className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none focus:border-cyan-500 placeholder:text-gray-600"
               disabled={submitting}
               required
@@ -94,15 +93,6 @@ export default function LoginPage() {
             {submitting ? 'Logging in...' : 'Login'}
           </button>
         </form>
-
-        <div className="mt-6 pt-6 border-t border-white/10">
-          <p className="text-xs text-gray-500 mb-2">Demo Credentials:</p>
-          <div className="bg-white/5 rounded-lg p-3 space-y-1 text-xs">
-            <p className="text-gray-300"><span className="text-cyan-400">Email:</span> {ADMIN_CREDENTIALS.email}</p>
-            <p className="text-gray-300"><span className="text-cyan-400">Password:</span> {ADMIN_CREDENTIALS.password}</p>
-          </div>
-          <p className="text-xs text-gray-500 mt-3">Change credentials in <code className="bg-white/5 px-2 py-1 rounded">.env</code> file</p>
-        </div>
       </div>
     </div>
   );
