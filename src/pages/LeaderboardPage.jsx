@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, Filter, Calculator, Crown, Medal } from 'lucide-react';
-import { players, calculateLeaderboard } from '../data/players';
+import { useTournamentData } from '../hooks/useTournamentData';
 import LeaderboardTable from '../components/LeaderboardTable';
 
 function PodiumCard({ player, position }) {
@@ -74,9 +74,10 @@ function GroupBlock({ label, accent, playersList }) {
 
 export default function LeaderboardPage() {
   const [filter, setFilter] = useState('all');
+  const { players, getGroupLeaderboard } = useTournamentData();
 
-  const groupAPlayers = calculateLeaderboard(players.filter((player) => player.group === 'A'));
-  const groupBPlayers = calculateLeaderboard(players.filter((player) => player.group === 'B'));
+  const groupAPlayers = getGroupLeaderboard('A');
+  const groupBPlayers = getGroupLeaderboard('B');
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="ui-page space-y-10 mt-10">

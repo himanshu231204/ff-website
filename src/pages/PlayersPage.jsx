@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Filter } from 'lucide-react';
-import { players } from '../data/players';
+import { useTournamentData } from '../hooks/useTournamentData';
 import PlayerCard from '../components/PlayerCard';
 import content from '../data/content';
 
 export default function PlayersPage() {
   const [filter, setFilter] = useState('all');
+  const { players } = useTournamentData();
 
   const filteredPlayers = filter === 'all' 
     ? players 

@@ -35,6 +35,21 @@ export default function Navbar() {
 
           {/* Desktop Navigation - Right Side */}
           <div className="hidden md:flex items-center justify-end gap-2 lg:gap-4">
+            {/* Admin Link */}
+            <Link
+              to="/admin"
+              className="relative px-3 lg:px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 group whitespace-nowrap"
+            >
+              <span className="relative z-10 text-gray-400 group-hover:text-white">Admin</span>
+              <motion.div
+                className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 242, 255, 0.1), rgba(112, 0, 255, 0.1))',
+                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                }}
+              />
+            </Link>
+
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (
@@ -89,6 +104,21 @@ export default function Navbar() {
             className="md:hidden border-t border-white/10 bg-black/40"
           >
             <div className="mx-auto max-w-7xl px-4 md:px-8 lg:px-12 py-4 space-y-2">
+              {/* Mobile Admin Link */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0 }}
+              >
+                <Link
+                  to="/admin"
+                  onClick={() => setIsOpen(false)}
+                  className="block px-4 py-3 rounded-lg font-medium transition-all duration-300 text-gray-400 hover:text-white hover:bg-white/5"
+                >
+                  Admin
+                </Link>
+              </motion.div>
+
               {navLinks.map((link, index) => {
                 const isActive = location.pathname === link.path;
                 return (
@@ -96,7 +126,7 @@ export default function Navbar() {
                     key={link.path}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
+                    transition={{ delay: (index + 1) * 0.05 }}
                   >
                     <Link
                       to={link.path}
