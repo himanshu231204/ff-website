@@ -36,9 +36,9 @@ function PodiumCard({ player, position }) {
       <h3 className="truncate text-base font-bold text-white">{player.name}</h3>
       <p className="mt-1 text-sm text-gray-400">Group {player.group}</p>
       <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs">
-        <div><p className="text-gray-500">M</p><p className="font-semibold text-white">{player.matches}</p></div>
+        <div><p className="text-gray-500">M</p><p className="font-semibold text-white">{player.matchesPlayed}</p></div>
         <div><p className="text-gray-500">W</p><p className="font-semibold text-green-400">{player.wins}</p></div>
-        <div><p className="text-gray-500">K</p><p className="font-semibold text-red-400">{player.kills}</p></div>
+        <div><p className="text-gray-500">L</p><p className="font-semibold text-red-400">{player.losses}</p></div>
       </div>
       <div className={`mt-4 h-20 rounded-t-3xl bg-gradient-to-b ${config.gradient} ${config.glow} flex items-center justify-center`}>
         <span className="text-2xl font-black text-white/20">#{position}</span>
@@ -120,8 +120,8 @@ export default function LeaderboardPage() {
         </div>
         <div className="ui-grid ui-grid-3">
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-green-400">Win:</span> <span className="text-gray-300">+2 Points</span></div>
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-blue-400">KR:</span> <span className="text-gray-300">Kills / Matches</span></div>
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-yellow-400">Final:</span> <span className="text-gray-300">Points + KR</span></div>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-blue-400">NKR:</span> <span className="text-gray-300">Score Difference / Matches</span></div>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-yellow-400">Rank:</span> <span className="text-gray-300">Points DESC, then NKR DESC</span></div>
         </div>
       </section>
 

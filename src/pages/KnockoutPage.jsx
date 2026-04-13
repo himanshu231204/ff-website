@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Swords, Trophy, Crown, Users, ArrowRight, CheckCircle } from 'lucide-react';
 import { knockoutMatches, getQualifiedPlayers, generateSemiFinals, generateFinalMatch } from '../data/matches';
-import { players, calculateLeaderboard } from '../data/players';
+import { useTournamentData } from '../hooks/useTournamentData';
 
 function getTopPlayers(leaderboardData) {
   return [...leaderboardData].slice(0, 4);
@@ -63,11 +63,9 @@ function BracketLine() {
 }
 
 export default function KnockoutPage() {
-  const groupAPlayers = players.filter(p => p.group === 'A');
-  const groupBPlayers = players.filter(p => p.group === 'B');
-  
-  const sortedA = calculateLeaderboard(groupAPlayers);
-  const sortedB = calculateLeaderboard(groupBPlayers);
+  const { getGroupLeaderboard } = useTournamentData();
+  const sortedA = getGroupLeaderboard('A');
+  const sortedB = getGroupLeaderboard('B');
   
   const topA = getTopPlayers(sortedA);
   const topB = getTopPlayers(sortedB);
@@ -117,7 +115,7 @@ export default function KnockoutPage() {
                   {idx < 2 ? <Crown className="text-white" size={16} /> : <span className="text-white font-bold">{idx + 1}</span>}
                 </div>
                 <span className="font-semibold text-white">{player.name}</span>
-                <span className="ml-auto text-gray-400 text-sm">Score: {player.finalScore}</span>
+                <span className="ml-auto text-gray-400 text-sm">Points: {player.points} | NKR: {player.nkr}</span>
               </motion.div>
             ))}
           </div>
@@ -145,7 +143,7 @@ export default function KnockoutPage() {
                   {idx < 2 ? <Crown className="text-white" size={16} /> : <span className="text-white font-bold">{idx + 1}</span>}
                 </div>
                 <span className="font-semibold text-white">{player.name}</span>
-                <span className="ml-auto text-gray-400 text-sm">Score: {player.finalScore}</span>
+                <span className="ml-auto text-gray-400 text-sm">Points: {player.points} | NKR: {player.nkr}</span>
               </motion.div>
             ))}
           </div>

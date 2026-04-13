@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Users, Calendar, Trophy, Swords, Crown, Target, Zap, Flame, Medal } from 'lucide-react';
-import { players, calculateLeaderboard } from '../data/players';
-import { groupAMatches, groupBMatches } from '../data/matches';
+import { useTournamentData } from '../hooks/useTournamentData';
 import content from '../data/content';
 
 // ============================================
@@ -103,8 +102,8 @@ function TopPlayerCard({ player, rank }) {
       {/* Score */}
       <div className="relative z-10 mt-4 w-full">
         <div className="bg-white/5 rounded-lg py-2 px-4 border border-white/10">
-          <span className="text-gray-400 text-xs">{content.home.playerInfo.score}</span>
-          <p className="text-yellow-400 font-bold text-xl">{player.finalScore}</p>
+          <span className="text-gray-400 text-xs">Points / NKR</span>
+          <p className="text-yellow-400 font-bold text-lg">{player.points} / {player.nkr}</p>
         </div>
       </div>
     </motion.div>
@@ -135,7 +134,8 @@ function PlayerRow({ player, idx, group }) {
         <span className={`text-xs ${isGroupA ? 'text-blue-400' : 'text-purple-400'}`}>
           {content.home.playerInfo.level}{player.level}
         </span>
-        <span className="text-yellow-400 font-bold text-sm">{player.finalScore}</span>
+        <span className="text-yellow-400 font-bold text-sm">{player.points}p</span>
+        <span className="text-cyan-300 font-semibold text-xs">NKR {player.nkr}</span>
       </div>
     </motion.div>
   );
@@ -145,13 +145,18 @@ function PlayerRow({ player, idx, group }) {
 // MAIN HOMEPAGE COMPONENT
 // ============================================
 export default function HomePage() {
+  const { players, matches, getLeaderboard } = useTournamentData();
   const totalPlayers = players.length;
-  const totalMatches = groupAMatches.length + groupBMatches.length;
+  const totalMatches = matches.length;
 
-  const groupA = players.filter((player) => player.group === 'A');
-  const groupB = players.filter((player) => player.group === 'B');
-  const topThree = [...calculateLeaderboard(groupA), ...calculateLeaderboard(groupB)]
-    .sort((a, b) => parseFloat(b.finalScore) - parseFloat(a.finalScore))
+  const leaderboard = getLeaderboard(players);
+  const groupA = leaderboard.filter((player) => player.group === 'A');
+  const groupB = leaderboard.filter((player) => player.group === 'B');
+  const topThree = leaderboard
+    .sort((a, b) => {
+      if (b.points !== a.points) return b.points - a.points;
+      return b.nkr - a.nkr;
+    })
     .slice(0, 3);
 
   return (

@@ -2,23 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Crosshair, ChevronDown, ChevronUp, Search, Target } from 'lucide-react';
 import WeaponCard from '../components/WeaponCard';
-
-const allowedWeapons = [
-  'AWM-Y',
-  'Kar98K',
-  'Woodpecker',
-  'AC80',
-  'Groza (Normal)',
-  'SVD',
-  'XM8',
-  'MP40',
-  'Thompson (Normal)',
-  'Bizon',
-  'UMP',
-  'MP5',
-  'M1887',
-  'Desert Eagle',
-];
+import { useTournamentData } from '../hooks/useTournamentData';
 
 const weaponCategories = {
   'AWM-Y': 'Sniper',
@@ -43,6 +27,9 @@ export default function WeaponsPage() {
   const [isVisible, setIsVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const { weapons } = useTournamentData();
+
+  const allowedWeapons = weapons.map((weapon) => weapon.name);
 
   const filteredWeapons = allowedWeapons.filter(weapon => {
     const matchesSearch = weapon.toLowerCase().includes(searchTerm.toLowerCase());

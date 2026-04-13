@@ -1,47 +1,29 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Medal, Crown } from 'lucide-react';
+import { Medal, Crown } from 'lucide-react';
 
 export default function LeaderboardTable({ players }) {
-  const [sortConfig, setSortConfig] = useState({ key: 'finalScore', direction: 'desc' });
+  const [sortConfig, setSortConfig] = useState({ key: 'points', direction: 'desc' });
 
-  // Calculate stats for each player
-  const leaderboardData = useMemo(() => {
-    return players.map(player => {
-      const matches = player.matches || 1;
-      const wins = player.wins || 0;
-      const kills = player.kills || 0;
-      const kr = matches > 0 ? (kills / matches).toFixed(2) : 0;
-      const points = wins * 2;
-      const finalScore = parseFloat(points) + parseFloat(kr);
-      
-      return {
-        ...player,
-        matches,
-        wins,
-        kills,
-        kr: parseFloat(kr),
-        points,
-        finalScore: parseFloat(finalScore.toFixed(2))
-      };
-    });
-  }, [players]);
-
-  // Sort data
   const sortedData = useMemo(() => {
-    const sorted = [...leaderboardData].sort((a, b) => {
+    const data = [...players];
+    data.sort((a, b) => {
       if (sortConfig.direction === 'asc') {
-        return a[sortConfig.key] > b[sortConfig.key] ? 1 : -1;
+        if (a[sortConfig.key] < b[sortConfig.key]) return -1;
+        if (a[sortConfig.key] > b[sortConfig.key]) return 1;
+        return 0;
       }
-      return a[sortConfig.key] < b[sortConfig.key] ? 1 : -1;
+      if (a[sortConfig.key] < b[sortConfig.key]) return 1;
+      if (a[sortConfig.key] > b[sortConfig.key]) return -1;
+      return 0;
     });
-    return sorted;
-  }, [leaderboardData, sortConfig]);
+    return data;
+  }, [players, sortConfig]);
 
   const handleSort = (key) => {
-    setSortConfig(prev => ({
+    setSortConfig((prev) => ({
       key,
-      direction: prev.key === key && prev.direction === 'desc' ? 'asc' : 'desc'
+      direction: prev.key === key && prev.direction === 'desc' ? 'asc' : 'desc',
     }));
   };
 
@@ -66,53 +48,31 @@ export default function LeaderboardTable({ players }) {
 
   return (
     <div className="ui-card overflow-hidden p-0">
-      {/* Table Header */}
-      <div className="hidden md:grid md:grid-cols-8 gap-4 px-5 py-4 bg-white/5 border-b border-white/10">
-        <button 
-          onClick={() => handleSort('rank')}
-          className="text-left text-gray-400 font-semibold text-sm hover:text-white transition-colors"
-        >
-          Rank<SortIcon column="rank" />
-        </button>
-        <button 
-          onClick={() => handleSort('name')}
-          className="text-left col-span-2 text-gray-400 font-semibold text-sm hover:text-white transition-colors"
-        >
+      <div className="hidden md:grid md:grid-cols-9 gap-4 px-5 py-4 bg-white/5 border-b border-white/10">
+        <div className="text-left text-gray-400 font-semibold text-sm">Rank</div>
+        <button onClick={() => handleSort('name')} className="text-left col-span-2 text-gray-400 font-semibold text-sm hover:text-white transition-colors">
           Player<SortIcon column="name" />
         </button>
-        <button 
-          onClick={() => handleSort('matches')}
-          className="text-right text-gray-400 font-semibold text-sm hover:text-white transition-colors"
-        >
-          Matches<SortIcon column="matches" />
+        <button onClick={() => handleSort('matchesPlayed')} className="text-right text-gray-400 font-semibold text-sm hover:text-white transition-colors">
+          Matches<SortIcon column="matchesPlayed" />
         </button>
-        <button 
-          onClick={() => handleSort('wins')}
-          className="text-right text-gray-400 font-semibold text-sm hover:text-white transition-colors"
-        >
+        <button onClick={() => handleSort('wins')} className="text-right text-gray-400 font-semibold text-sm hover:text-white transition-colors">
           Wins<SortIcon column="wins" />
         </button>
-        <button 
-          onClick={() => handleSort('kills')}
-          className="text-right text-gray-400 font-semibold text-sm hover:text-white transition-colors"
-        >
-          Kills<SortIcon column="kills" />
+        <button onClick={() => handleSort('losses')} className="text-right text-gray-400 font-semibold text-sm hover:text-white transition-colors">
+          Losses<SortIcon column="losses" />
         </button>
-        <button 
-          onClick={() => handleSort('kr')}
-          className="text-right text-gray-400 font-semibold text-sm hover:text-white transition-colors"
-        >
-          KR<SortIcon column="kr" />
+        <button onClick={() => handleSort('points')} className="text-right text-cyan-400 font-semibold text-sm hover:text-white transition-colors">
+          Points<SortIcon column="points" />
         </button>
-        <button 
-          onClick={() => handleSort('finalScore')}
-          className="text-right text-orange-400 font-semibold text-sm hover:text-white transition-colors"
-        >
-          Final Score<SortIcon column="finalScore" />
+        <button onClick={() => handleSort('nkr')} className="text-right text-blue-400 font-semibold text-sm hover:text-white transition-colors">
+          NKR<SortIcon column="nkr" />
+        </button>
+        <button onClick={() => handleSort('totalScoreDifference')} className="text-right text-purple-400 font-semibold text-sm hover:text-white transition-colors">
+          Diff<SortIcon column="totalScoreDifference" />
         </button>
       </div>
 
-      {/* Table Body */}
       <div className="divide-y divide-white/5">
         <AnimatePresence>
           {sortedData.map((player, idx) => {
@@ -123,19 +83,17 @@ export default function LeaderboardTable({ players }) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-8 gap-3 px-5 py-4 hover:bg-white/10 transition-all duration-300 group ${
+                transition={{ duration: 0.3, delay: idx * 0.04 }}
+                className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-9 gap-3 px-5 py-4 hover:bg-white/10 transition-all duration-300 ${
                   rank <= 3 ? 'bg-gradient-to-r from-white/5 to-transparent' : ''
                 }`}
               >
-                {/* Rank */}
                 <div className="flex items-center">
                   <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${getRankStyle(rank)} flex items-center justify-center`}>
                     {getRankIcon(rank)}
                   </div>
                 </div>
 
-                {/* Player Name */}
                 <div className="col-span-2 flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${getRankStyle(rank)} flex items-center justify-center`}>
                     <span className="text-white font-bold">{player.name.charAt(0)}</span>
@@ -146,29 +104,12 @@ export default function LeaderboardTable({ players }) {
                   </div>
                 </div>
 
-                {/* Stats */}
-                <div className="text-right md:text-center">
-                  <span className="md:hidden text-gray-400 text-sm">Matches: </span>
-                  <span className="text-white font-medium">{player.matches}</span>
-                </div>
-                <div className="text-right md:text-center">
-                  <span className="md:hidden text-gray-400 text-sm">Wins: </span>
-                  <span className="text-green-400 font-medium">{player.wins}</span>
-                </div>
-                <div className="text-right md:text-center">
-                  <span className="md:hidden text-gray-400 text-sm">Kills: </span>
-                  <span className="text-red-400 font-medium">{player.kills}</span>
-                </div>
-                <div className="text-right md:text-center">
-                  <span className="md:hidden text-gray-400 text-sm">KR: </span>
-                  <span className="text-blue-400 font-medium">{player.kr}</span>
-                </div>
-                <div className="text-right">
-                  <span className="md:hidden text-gray-400 text-sm">Score: </span>
-                  <span className={`font-bold ${rank <= 3 ? 'text-yellow-400' : 'text-orange-400'}`}>
-                    {player.finalScore}
-                  </span>
-                </div>
+                <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">Matches: </span><span className="text-white font-medium">{player.matchesPlayed}</span></div>
+                <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">Wins: </span><span className="text-green-400 font-medium">{player.wins}</span></div>
+                <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">Losses: </span><span className="text-red-400 font-medium">{player.losses}</span></div>
+                <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">Points: </span><span className="text-cyan-300 font-semibold">{player.points}</span></div>
+                <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">NKR: </span><span className="text-blue-400 font-semibold">{player.nkr}</span></div>
+                <div className="text-right"><span className="md:hidden text-gray-400 text-sm">Diff: </span><span className="text-purple-300 font-semibold">{player.totalScoreDifference}</span></div>
               </motion.div>
             );
           })}

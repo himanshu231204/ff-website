@@ -71,7 +71,7 @@
       "group": "Group",
       "matches": "M",
       "wins": "W",
-      "kills": "K"
+      "losses": "L"
     },
     "emptyMessage": "No players found in this group"
   },
@@ -119,19 +119,19 @@
       "title": "Scoring System",
       "win": "Win",
       "winPoints": "+2 Points",
-      "kr": "KR",
-      "krDescription": "Kills / Matches",
-      "final": "Final",
-      "finalDescription": "Points + KR"
+      "nkr": "NKR",
+      "nkrDescription": "Score Difference / Matches",
+      "sort": "Sort",
+      "sortDescription": "Points DESC, then NKR DESC"
     },
     "table": {
       "rank": "Rank",
       "player": "Player",
       "matches": "Matches",
       "wins": "Wins",
-      "kills": "Kills",
-      "kr": "KR",
-      "score": "Score"
+      "losses": "Losses",
+      "points": "Points",
+      "nkr": "NKR"
     },
     "groups": {
       "a": "Group A",
@@ -281,11 +281,14 @@
         "icon": "trophy",
         "rules": [
           "Win = 2 Points",
-          "Kill = Counted for Kill Rate (KR)",
-          "KR = Total Kills / Matches Played",
-          "Final Score = Points + KR"
+          "Loss = 0 Points",
+          "Per match score difference: winner gets +diff, loser gets -diff",
+          "Example: 8-7 -> +1 / -1, 8-5 -> +3 / -3, 8-3 -> +5 / -5",
+          "Net Kill Rate (NKR) uses score difference per match",
+          "NKR = Total Score Difference / Matches Played",
+          "Sorting: Points DESC, then NKR DESC"
         ],
-        "note": "Players are sorted by Final Score, then KR, then Wins"
+        "note": "Ranking priority: Points first, then NKR. Higher margin wins improve NKR."
       },
       "qualification": {
         "title": "Qualification Rules",

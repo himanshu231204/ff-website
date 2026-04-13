@@ -2,30 +2,13 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UserX, ChevronDown, ChevronUp, AlertTriangle, ShieldAlert } from 'lucide-react';
 import CharacterCard from '../components/CharacterCard';
-
-const bannedCharacters = {
-  active: [
-    'Ray',
-    'Nero',
-    'Morse',
-    'Oscar',
-    'Kassie',
-    'Ryden',
-    'Ignis',
-    'Iris',
-    'Dimitri',
-    'Skyler',
-    'A124',
-  ],
-  passive: [
-    'Sonia',
-  ],
-};
+import { useTournamentData } from '../hooks/useTournamentData';
 
 export default function BannedPage() {
   const [isVisible, setIsVisible] = useState(true);
   const [showActive, setShowActive] = useState(true);
   const [showPassive, setShowPassive] = useState(true);
+  const { bannedCharacters } = useTournamentData();
 
   const totalBanned = bannedCharacters.active.length + bannedCharacters.passive.length;
 
@@ -160,8 +143,8 @@ export default function BannedPage() {
                         <div className="ui-grid ui-grid-3">
                           {bannedCharacters.active.map((character, index) => (
                             <CharacterCard 
-                              key={character} 
-                              character={character} 
+                              key={character.id} 
+                              character={character.name} 
                               type="active" 
                               index={index} 
                             />
@@ -204,8 +187,8 @@ export default function BannedPage() {
                         <div className="ui-grid ui-grid-3">
                           {bannedCharacters.passive.map((character, index) => (
                             <CharacterCard 
-                              key={character} 
-                              character={character} 
+                              key={character.id} 
+                              character={character.name} 
                               type="passive" 
                               index={index} 
                             />
