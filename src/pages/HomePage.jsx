@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Users, Calendar, Trophy, Swords, Crown, Target, Zap, Flame, Medal } from 'lucide-react';
 import { players, calculateLeaderboard } from '../data/players';
 import { groupAMatches, groupBMatches } from '../data/matches';
-import content from '../data/content.json';
+import content from '../data/content';
 
 // ============================================
 // STAT CARD - Equal Size Cards

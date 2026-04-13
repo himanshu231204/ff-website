@@ -8,7 +8,7 @@ import KnockoutPage from './pages/KnockoutPage';
 import WeaponsPage from './pages/WeaponsPage';
 import BannedPage from './pages/BannedPage';
 import RulesPage from './pages/RulesPage';
-import content from './data/content.json';
+import content from './data/content';
 
 function App() {
   return (

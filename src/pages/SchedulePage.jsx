@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Users, Trophy, Swords, Zap, Target, Flame } from 'lucide-react';
 import { groupAMatches, groupBMatches } from '../data/matches';
 import MatchCard from '../components/MatchCard';
-import content from '../data/content.json';
+import content from '../data/content';
 
 function MatchGroup({ title, matches, group, delayStart = 0 }) {
   const isGroupA = group === 'A';

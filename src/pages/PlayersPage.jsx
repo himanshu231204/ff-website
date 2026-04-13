@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Filter } from 'lucide-react';
 import { players } from '../data/players';
 import PlayerCard from '../components/PlayerCard';
-import content from '../data/content.json';
+import content from '../data/content';
 
 export default function PlayersPage() {
   const [filter, setFilter] = useState('all');

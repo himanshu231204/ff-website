@@ -5,7 +5,7 @@ import {
   UserX, Shield, Ban, Gavel, Calendar, ArrowRight,
   AlertTriangle, CheckCircle
 } from 'lucide-react';
-import content from '../data/content.json';
+import content from '../data/content';
 
 // Icon mapping
 const getIcon = (iconName) => {

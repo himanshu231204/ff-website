@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Zap } from 'lucide-react';
-import content from '../data/content.json';
+import content from '../data/content';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
