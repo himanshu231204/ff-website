@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Filter } from 'lucide-react';
 import { players } from '../data/players';
 import PlayerCard from '../components/PlayerCard';
+import content from '../data/content.json';
 
 export default function PlayersPage() {
   const [filter, setFilter] = useState('all');
@@ -42,8 +43,7 @@ export default function PlayersPage() {
           transition={{ delay: 0.2 }}
           className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 px-2"
         >
-          <span className="gradient-text">Tournament</span>
-          <span className="text-white"> Players</span>
+          <span className="gradient-text">{content.players.title}</span>
         </motion.h1>
         
         <motion.p
@@ -52,7 +52,7 @@ export default function PlayersPage() {
           transition={{ delay: 0.3 }}
           className="text-sm sm:text-xl text-gray-400 max-w-xl mx-auto px-4"
         >
-          All registered players competing in the tournament
+          {content.players.description}
         </motion.p>
       </motion.div>
 
@@ -66,30 +66,34 @@ export default function PlayersPage() {
         <div className="flex flex-wrap items-center gap-3 sm:gap-4">
           <div className="flex items-center gap-2">
             <Filter className="text-[#00F2FF]" size={18} />
-            <span className="text-gray-400 font-medium text-sm">Filter:</span>
+            <span className="text-gray-400 font-medium text-sm">{content.players.filter.label}:</span>
           </div>
           <div className="flex flex-wrap gap-2">
-            {['all', 'A', 'B'].map((group) => (
+            {[
+              { value: 'all', label: content.players.filter.all },
+              { value: 'A', label: content.players.filter.groupA },
+              { value: 'B', label: content.players.filter.groupB }
+            ].map((option) => (
               <button
-                key={group}
-                onClick={() => setFilter(group)}
+                key={option.value}
+                onClick={() => setFilter(option.value)}
                 className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 ${
-                  filter === group
+                  filter === option.value
                     ? 'bg-gradient-to-r from-[#00F2FF] to-[#7000FF] text-white shadow-lg shadow-[#00F2FF]/20'
                     : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10 hover:border-white/20'
                 }`}
               >
-                {group === 'all' ? 'All Players' : `Group ${group}`}
+                {option.label}
               </button>
             ))}
           </div>
           <span className="ml-auto text-gray-500 text-xs sm:text-sm hidden sm:block">
-            Showing <span className="text-[#00F2FF] font-semibold">{filteredPlayers.length}</span> of <span className="text-white font-semibold">{players.length}</span> players
+            {content.players.player.matches} <span className="text-[#00F2FF] font-semibold">{filteredPlayers.length}</span> of <span className="text-white font-semibold">{players.length}</span>
           </span>
         </div>
         {/* Mobile counter */}
         <div className="sm:hidden text-center mt-2 text-gray-500 text-xs">
-          Showing <span className="text-[#00F2FF] font-semibold">{filteredPlayers.length}</span> of <span className="text-white font-semibold">{players.length}</span> players
+          {content.players.player.matches} <span className="text-[#00F2FF] font-semibold">{filteredPlayers.length}</span> of <span className="text-white font-semibold">{players.length}</span>
         </div>
       </motion.div>
 
@@ -113,7 +117,7 @@ export default function PlayersPage() {
           animate={{ opacity: 1 }}
           className="text-center py-12"
         >
-          <p className="text-gray-400 text-lg">No players found in this group</p>
+          <p className="text-gray-400 text-lg">{content.players.emptyMessage}</p>
         </motion.div>
       )}
     </motion.div>

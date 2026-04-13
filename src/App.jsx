@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import PlayersPage from './pages/PlayersPage';
@@ -11,8 +11,6 @@ import RulesPage from './pages/RulesPage';
 import content from './data/content.json';
 
 function App() {
-  const location = useLocation();
-  
   return (
     <Router>
       <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-[#050005] via-[#0a0a15] to-[#1A1B4B]">
@@ -20,7 +18,7 @@ function App() {
 
         <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
           <div className="max-w-7xl mx-auto">
-            <Routes location={location}>
+            <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/players" element={<PlayersPage />} />
               <Route path="/schedule" element={<SchedulePage />} />

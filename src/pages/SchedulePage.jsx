@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Calendar, Users, Trophy, Swords, Zap, Target, Flame } from 'lucide-react';
 import { groupAMatches, groupBMatches } from '../data/matches';
 import MatchCard from '../components/MatchCard';
+import content from '../data/content.json';
 
 function MatchGroup({ title, matches, group, delayStart = 0 }) {
   const isGroupA = group === 'A';
@@ -91,7 +92,7 @@ export default function SchedulePage() {
           className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-white/10 rounded-full mb-6"
         >
           <Flame className="text-orange-400 animate-pulse" size={16} />
-          <span className="text-orange-400 font-medium text-sm">Tournament Live</span>
+          <span className="text-orange-400 font-medium text-sm">{content.schedule.badge}</span>
         </motion.div>
         
         <motion.div
@@ -109,8 +110,8 @@ export default function SchedulePage() {
           transition={{ delay: 0.2 }}
           className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4"
         >
-          <span className="gradient-text">Match</span>
-          <span className="text-white"> Schedule</span>
+          <span className="gradient-text">{content.schedule.title.split(' ')[0]}</span>
+          <span className="text-white"> {content.schedule.title.split(' ').slice(1).join(' ')}</span>
         </motion.h1>
         
         <motion.p
@@ -119,7 +120,7 @@ export default function SchedulePage() {
           transition={{ delay: 0.3 }}
           className="text-sm sm:text-lg text-gray-400 max-w-xl mx-auto"
         >
-          Complete tournament schedule with group matches and knockout rounds
+          {content.schedule.description}
         </motion.p>
       </motion.div>
 
@@ -130,7 +131,7 @@ export default function SchedulePage() {
           <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl" />
           <div className="relative z-10">
-            <MatchGroup title="Group A" matches={groupAMatches} group="A" delayStart={0.15} />
+            <MatchGroup title={content.schedule.groups.a} matches={groupAMatches} group="A" delayStart={0.15} />
           </div>
         </div>
 
@@ -139,7 +140,7 @@ export default function SchedulePage() {
           <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl" />
           <div className="relative z-10">
-            <MatchGroup title="Group B" matches={groupBMatches} group="B" delayStart={0.25} />
+            <MatchGroup title={content.schedule.groups.b} matches={groupBMatches} group="B" delayStart={0.25} />
           </div>
         </div>
       </div>
@@ -161,8 +162,8 @@ export default function SchedulePage() {
             <Trophy className="text-white" size={24} />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-white">Tournament Format</h2>
-            <p className="text-gray-500 text-sm">Complete competition structure</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-white">{content.schedule.format.title}</h2>
+            <p className="text-gray-500 text-sm">{content.schedule.format.groupStage.description}</p>
           </div>
         </div>
 
@@ -180,11 +181,11 @@ export default function SchedulePage() {
               <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-blue-500/30 to-purple-500/30 rounded-2xl flex items-center justify-center border border-white/10">
                 <Users className="text-blue-400" size={28} />
               </div>
-              <h3 className="font-bold text-white text-lg mb-2">Group Stage</h3>
-              <p className="text-gray-500 text-sm mb-3">Round Robin format</p>
+              <h3 className="font-bold text-white text-lg mb-2">{content.schedule.format.groupStage.title}</h3>
+              <p className="text-gray-500 text-sm mb-3">{content.schedule.format.groupStage.description}</p>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-500/20 rounded-full">
                 <span className="text-blue-400 font-bold">{groupAMatches.length + groupBMatches.length}</span>
-                <span className="text-gray-400 text-xs">Matches</span>
+                <span className="text-gray-400 text-xs">{content.schedule.format.groupStage.title}</span>
               </div>
             </div>
           </motion.div>
@@ -201,11 +202,11 @@ export default function SchedulePage() {
               <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-cyan-500/30 to-[#7000FF]/30 rounded-2xl flex items-center justify-center border border-white/10">
                 <Swords className="text-cyan-400" size={28} />
               </div>
-              <h3 className="font-bold text-white text-lg mb-2">Semi Finals</h3>
-              <p className="text-gray-500 text-sm mb-3">Top 4 from each group</p>
+              <h3 className="font-bold text-white text-lg mb-2">{content.schedule.format.semiFinals.title}</h3>
+              <p className="text-gray-500 text-sm mb-3">{content.schedule.format.semiFinals.description}</p>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-500/20 rounded-full">
                 <span className="text-cyan-400 font-bold">2</span>
-                <span className="text-gray-400 text-xs">Matches</span>
+                <span className="text-gray-400 text-xs">{content.schedule.format.semiFinals.title}</span>
               </div>
             </div>
           </motion.div>
@@ -222,11 +223,11 @@ export default function SchedulePage() {
               <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-2xl flex items-center justify-center border border-white/10">
                 <Trophy className="text-yellow-400" size={28} />
               </div>
-              <h3 className="font-bold text-white text-lg mb-2">Grand Final</h3>
-              <p className="text-gray-500 text-sm mb-3">Group Winners</p>
+              <h3 className="font-bold text-white text-lg mb-2">{content.schedule.format.grandFinal.title}</h3>
+              <p className="text-gray-500 text-sm mb-3">{content.schedule.format.grandFinal.description}</p>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-yellow-500/20 rounded-full">
                 <span className="text-yellow-400 font-bold">1</span>
-                <span className="text-gray-400 text-xs">Match</span>
+                <span className="text-gray-400 text-xs">{content.schedule.format.grandFinal.title}</span>
               </div>
             </div>
           </motion.div>

@@ -2,19 +2,12 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Zap } from 'lucide-react';
-
-const navLinks = [
-  { path: '/', label: 'Home' },
-  { path: '/players', label: 'Players' },
-  { path: '/schedule', label: 'Schedule' },
-  { path: '/leaderboard', label: 'Leaderboard' },
-  { path: '/weapons', label: 'Weapons' },
-  { path: '/banned', label: 'Banned' },
-];
+import content from '../data/content.json';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const navLinks = content.navbar.links;
 
   return (
     <motion.nav
@@ -34,8 +27,8 @@ export default function Navbar() {
             </motion.div>
             <div className="hidden sm:block">
               <h1 className="text-lg font-bold text-white tracking-tight">
-                <span className="text-[#00F2FF]">FF</span>
-                <span className="text-gray-400"> Clash</span>
+                <span className="text-[#00F2FF]">{content.navbar.logo.split(' ')[0]}</span>
+                <span className="text-gray-400"> {content.navbar.logo.split(' ').slice(1).join(' ')}</span>
               </h1>
             </div>
           </Link>
@@ -51,7 +44,7 @@ export default function Navbar() {
                   className="relative px-3 lg:px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 group whitespace-nowrap"
                 >
                   <span className={`relative z-10 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'}`}>
-                    {link.label}
+                    {link.name}
                   </span>
                   {isActive && (
                     <motion.div
@@ -114,7 +107,7 @@ export default function Navbar() {
                           : 'text-gray-400 hover:text-white hover:bg-white/5'
                       }`}
                     >
-                      {link.label}
+                      {link.name}
                     </Link>
                   </motion.div>
                 );

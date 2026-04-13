@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Users, Calendar, Trophy, Swords, Crown, Target, Zap, Flame, Medal, Star } from 'lucide-react';
+import { Users, Calendar, Trophy, Swords, Crown, Target, Zap, Flame, Medal } from 'lucide-react';
 import { players, calculateLeaderboard } from '../data/players';
 import { groupAMatches, groupBMatches } from '../data/matches';
+import content from '../data/content.json';
 
 // ============================================
 // STAT CARD - Equal Size Cards
@@ -95,14 +96,14 @@ function TopPlayerCard({ player, rank }) {
             ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' 
             : 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
         }`}>
-          Group {player.group}
+          {content.home.playerInfo.group} {player.group}
         </span>
       </div>
 
       {/* Score */}
       <div className="relative z-10 mt-4 w-full">
         <div className="bg-white/5 rounded-lg py-2 px-4 border border-white/10">
-          <span className="text-gray-400 text-xs">Score</span>
+          <span className="text-gray-400 text-xs">{content.home.playerInfo.score}</span>
           <p className="text-yellow-400 font-bold text-xl">{player.finalScore}</p>
         </div>
       </div>
@@ -132,7 +133,7 @@ function PlayerRow({ player, idx, group }) {
       </div>
       <div className="flex items-center gap-2">
         <span className={`text-xs ${isGroupA ? 'text-blue-400' : 'text-purple-400'}`}>
-          Lv.{player.level}
+          {content.home.playerInfo.level}{player.level}
         </span>
         <span className="text-yellow-400 font-bold text-sm">{player.finalScore}</span>
       </div>
@@ -188,7 +189,7 @@ export default function HomePage() {
           className="inline-flex items-center gap-2 px-4 py-2 bg-[#00F2FF]/10 border border-[#00F2FF]/30 rounded-full mb-6"
         >
           <Flame className="text-[#00F2FF] animate-pulse" size={16} />
-          <span className="text-[#00F2FF] font-medium text-sm tracking-wide">Live Tournament</span>
+          <span className="text-[#00F2FF] font-medium text-sm tracking-wide">{content.home.badge.text}</span>
         </motion.div>
 
         {/* Heading */}
@@ -198,9 +199,9 @@ export default function HomePage() {
           transition={{ delay: 0.3, duration: 0.6 }}
           className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4"
         >
-          <span className="text-white">Free Fire</span>
+          <span className="text-white">{content.home.title}</span>
           <br />
-          <span className="gradient-text text-glow">Clash Squad</span>
+          <span className="gradient-text text-glow">{content.home.subtitle}</span>
         </motion.h1>
 
         <motion.p
@@ -209,7 +210,7 @@ export default function HomePage() {
           transition={{ delay: 0.4 }}
           className="text-lg text-gray-400 max-w-xl mx-auto mb-8"
         >
-          Premium esports tournament dashboard with real-time leaderboards
+          {content.home.description}
         </motion.p>
 
         {/* CTA Buttons */}
@@ -227,7 +228,7 @@ export default function HomePage() {
             >
               <span className="flex items-center gap-2">
                 <Users size={18} />
-                View Players
+                {content.home.buttons.viewPlayers}
               </span>
             </motion.button>
           </Link>
@@ -239,7 +240,7 @@ export default function HomePage() {
             >
               <span className="flex items-center gap-2">
                 <Trophy size={18} className="text-yellow-400" />
-                Leaderboard
+                {content.home.buttons.leaderboard}
               </span>
             </motion.button>
           </Link>
@@ -250,10 +251,10 @@ export default function HomePage() {
       {/* STATS GRID - Equal Size Cards */}
       {/* ============================================ */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <StatCard icon={Users} label="Total Players" value={totalPlayers} color="bg-gradient-to-br from-[#00F2FF] to-[#00D4E0]" delay={0.1} />
-        <StatCard icon={Swords} label="Groups" value="2" color="bg-gradient-to-br from-[#7000FF] to-[#8B5CF6]" delay={0.15} />
-        <StatCard icon={Calendar} label="Matches" value={totalMatches} color="bg-gradient-to-br from-pink-500 to-rose-500" delay={0.2} />
-        <StatCard icon={Trophy} label="Rounds" value="3" color="bg-gradient-to-br from-yellow-500 to-orange-500" delay={0.25} />
+        <StatCard icon={Users} label={content.home.stats.players} value={totalPlayers} color="bg-gradient-to-br from-[#00F2FF] to-[#00D4E0]" delay={0.1} />
+        <StatCard icon={Swords} label={content.home.stats.groups} value="2" color="bg-gradient-to-br from-[#7000FF] to-[#8B5CF6]" delay={0.15} />
+        <StatCard icon={Calendar} label={content.home.stats.matches} value={totalMatches} color="bg-gradient-to-br from-pink-500 to-rose-500" delay={0.2} />
+        <StatCard icon={Trophy} label={content.home.stats.rounds} value="3" color="bg-gradient-to-br from-yellow-500 to-orange-500" delay={0.25} />
       </div>
 
       {/* ============================================ */}
@@ -274,8 +275,8 @@ export default function HomePage() {
               <Target className="text-white" size={22} />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-white">Group A</h2>
-              <p className="text-gray-500 text-sm">{groupA.length} Players</p>
+              <h2 className="text-xl font-bold text-white">{content.home.sections.groupA}</h2>
+              <p className="text-gray-500 text-sm">{groupA.length} {content.home.stats.groups.toLowerCase()}</p>
             </div>
             <span className="px-3 py-1.5 bg-blue-500/20 border border-blue-500/30 rounded-full text-sm text-blue-400 font-medium">
               {groupA.length} Players
@@ -303,8 +304,8 @@ export default function HomePage() {
               <Target className="text-white" size={22} />
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-white">Group B</h2>
-              <p className="text-gray-500 text-sm">{groupB.length} Players</p>
+              <h2 className="text-xl font-bold text-white">{content.home.sections.groupB}</h2>
+              <p className="text-gray-500 text-sm">{groupB.length} {content.home.stats.groups.toLowerCase()}</p>
             </div>
             <span className="px-3 py-1.5 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm text-purple-400 font-medium">
               {groupB.length} Players
@@ -332,7 +333,7 @@ export default function HomePage() {
         
         <div className="flex items-center gap-3 mb-6 relative z-10">
           <Trophy className="text-yellow-500" size={24} />
-          <h2 className="text-xl sm:text-2xl font-bold text-white">Top Players</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-white">{content.home.sections.topPlayers}</h2>
           <span className="ml-auto px-3 py-1 bg-yellow-500/20 border border-yellow-500/30 rounded-full text-xs text-yellow-400 font-medium">
             Top 3
           </span>
@@ -356,15 +357,15 @@ export default function HomePage() {
       >
         <Link to="/schedule" className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40">
           <Calendar size={18} />
-          View Schedule
+          {content.home.quickLinks.schedule}
         </Link>
         <Link to="/weapons" className="px-6 py-3 bg-gradient-to-r from-[#00F2FF] to-[#7000FF] hover:from-[#00E5ED] hover:to-[#8B5CF6] rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shadow-[#00F2FF]/20 hover:shadow-[#00F2FF]/40">
           <Swords size={18} />
-          Allowed Weapons
+          {content.home.quickLinks.weapons}
         </Link>
         <Link to="/banned" className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shadow-red-500/20 hover:shadow-red-500/40">
           <Users size={18} />
-          Banned Characters
+          {content.home.quickLinks.banned}
         </Link>
       </motion.div>
     </motion.div>

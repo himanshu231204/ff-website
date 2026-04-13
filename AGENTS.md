@@ -8,13 +8,13 @@
 
 ## Developer Commands
 ```bash
-npm run dev      # Start dev server
-npm run build    # Production build
+npm run dev      # Start dev server (may use port 5173-5175)
+npm run build    # Production build to dist/
 npm run lint     # ESLint check
 npm run preview  # Preview production build
 ```
 
-**Windows PowerShell**: Use `;` instead of `&&` for chaining commands.
+**Windows PowerShell**: Use `;` instead of `&&`
 ```bash
 cd C:/Users/himan/Desktop/Free_fire; npm run build
 ```
@@ -22,64 +22,52 @@ cd C:/Users/himan/Desktop/Free_fire; npm run build
 ## Project Structure
 ```
 src/
-├── App.jsx              # Main router (no Navbar here - separate component)
-├── index.css            # Global styles + glass-card + gradient utilities
+├── App.jsx              # Main router
+├── index.css            # Global styles + glass-card + glow utilities
 ├── main.jsx             # Entry point
-├── components/
-│   ├── Navbar.jsx       # Sticky nav with mobile hamburger menu
-│   ├── PlayerCard.jsx   # Player grid card with glow effects
-│   ├── MatchCard.jsx    # Schedule match card with VS design
-│   ├── LeaderboardTable.jsx # Sortable leaderboard table
-│   ├── WeaponCard.jsx   # Weapon card with category badge
-│   └── CharacterCard.jsx # Banned character card
-├── pages/
-│   ├── HomePage.jsx     # Hero section + stats + groups
-│   ├── PlayersPage.jsx  # Card grid with group filters
-│   ├── SchedulePage.jsx # Match cards grouped by group
-│   ├── LeaderboardPage.jsx # Sortable tables with scoring
-│   ├── KnockoutPage.jsx # Existing knockout bracket
-│   ├── WeaponsPage.jsx  # Allowed weapons with search/filter
-│   └── BannedPage.jsx  # Banned characters (active/passive)
+├── components/          # Navbar, PlayerCard, MatchCard, etc.
+├── pages/               # Home, Players, Schedule, Leaderboard, Knockout, Weapons, Banned, Rules
 └── data/
-    ├── players.js       # Player data
-    └── matches.js       # Match data
+    ├── players.js       # Player data with stats
+    ├── matches.js       # Match data + automation functions
+    └── content.json     # All text content (centralized)
 ```
 
 ## Important Conventions
 
 ### Tailwind v4
-- No `tailwind.config.js` - styles are in CSS via `@theme` or `index.css`
-- Glass card utility: `.glass-card` (defined in `index.css`)
+- No `tailwind.config.js` - styles in CSS via `@theme` or `index.css`
+- Glass card utility: `.glass-card` class (defined in `index.css`)
+
+### Content Management
+- **All text in `src/data/content.json`** - navbar, pages, footer
+- Update content there instead of in component files
+
+### Dynamic Leaderboard
+- Scores calculated from player stats (not hardcoded)
+- Formula: `(wins * 2) + (kills / matches)`
+- Sort: Score DESC → KR DESC → Wins DESC
+
+### Adding Pages
+1. Create `src/pages/PageName.jsx`
+2. Import in `App.jsx`
+3. Add `<Route path="/path" element={<PageName />} />`
 
 ### Components
 - Use `framer-motion` for animations: `<motion.div initial={{...}} animate={{...}} />`
 - Lucide React for icons: `import { IconName } from 'lucide-react'`
-- Dark theme with `glass-card` class for cards
+- Dark theme with `.glass-card` class
 
-### Adding New Pages
-1. Create page in `src/pages/PageName.jsx`
-2. Import in `App.jsx`
-3. Add `<Route path="/path" element={<PageName />} />`
-
-### Leaderboard Scoring Logic
-```js
-const KR = kills / matches;
-const points = wins * 2;
-const finalScore = points + KR;
-// Sort: Final Score DESC → KR DESC → Wins DESC
-```
-
-## Build Output
-- Production build goes to `dist/` folder
-- Run `npm run preview` to serve dist locally
-- `vercel.json` handles SPA routing for Vercel deployment
+## CI/CD
+- **Lint job targets wrong directories** (`eslint app components hooks utils` should be `eslint src` or similar)
+- Build passes: `npm run build` outputs to `dist/`
+- Vercel handles SPA routing via `vercel.json`
 
 ## Testing
 - No test framework configured
-- Use `npm run build` to verify compilation
+- Verify with `npm run build` (compilation check only)
 
 ## Key Files
-- `src/App.jsx` - Main app with routing
-- `src/index.css` - Global styles + glass-card + glow utilities
-- `src/components/Navbar.jsx` - Navigation with mobile support
-- `src/pages/HomePage.jsx` - Hero with animations + stats
+- `src/data/content.json` - Centralized text content
+- `src/data/matches.js` - Match automation functions
+- `src/pages/RulesPage.jsx` - Rules & regulations
