@@ -49,12 +49,12 @@ export default function MatchesManager({ players, matches, onCreateMatch, onDele
 
   return (
     <div className="space-y-6">
-      <div className="ui-card">
+      <div className="glass-card rounded-2xl p-6 border border-white/15">
         <h2 className="text-2xl font-bold text-white">Manage Matches & Results</h2>
-        <p className="text-gray-400 mt-1">Create matches and instantly update tournament statistics.</p>
+        <p className="text-gray-300 mt-1">Create matches and instantly update tournament statistics.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="ui-card">
+      <form onSubmit={handleSubmit} className="glass-card rounded-2xl p-6 border border-white/15">
         <div className="ui-grid ui-grid-3">
           <label className="flex flex-col gap-2">
             <span className="text-sm text-gray-300">Player 1</span>
@@ -142,31 +142,31 @@ export default function MatchesManager({ players, matches, onCreateMatch, onDele
         </button>
       </form>
 
-      <div className="ui-card">
-        <h3 className="text-lg font-semibold text-white mb-3">Recent Matches ({matches.length})</h3>
+      <div className="glass-card rounded-2xl p-6 border border-white/15">
+        <h3 className="text-lg font-semibold text-white mb-4">Recent Matches ({matches.length})</h3>
         <div className="space-y-3">
           {sortedMatches.slice(0, 15).map((match) => (
-            <div key={match.id} className="rounded-xl border border-white/10 bg-white/5 p-4 flex items-center justify-between">
+            <div key={match.id} className="rounded-xl border border-white/20 bg-white/5 p-4 flex items-center justify-between hover:bg-white/10 hover:border-white/30 transition-all">
               <div className="flex-1">
                 <p className="text-white font-medium">
-                  {match.player1} vs {match.player2}
+                  {match.player1} <span className="text-gray-400 text-sm">vs</span> {match.player2}
                 </p>
-                <p className="text-sm text-gray-400 mt-1">
+                <p className="text-sm text-gray-300 mt-1">
                   Winner: <span className="text-green-400 font-medium">{match.winner}</span> | 
-                  {' '}Kills: {match.kills[match.player1]} - {match.kills[match.player2]} | 
-                  {' '}Stage: <span className="capitalize">{match.stage}</span>
+                  {' '}Kills: <span className="text-cyan-300">{match.kills[match.player1]} - {match.kills[match.player2]}</span> | 
+                  {' '}Stage: <span className="text-purple-300 capitalize font-medium">{match.stage}</span>
                 </p>
               </div>
               <button
                 onClick={() => onDeleteMatch(match.id)}
-                className="rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-300 hover:bg-red-500/20 ml-4"
+                className="rounded-lg border border-red-500/40 bg-red-500/15 p-2 text-red-300 hover:bg-red-500/25 hover:border-red-500/60 ml-4 transition-all"
                 title="Delete match"
               >
                 <Trash2 size={16} />
               </button>
             </div>
           ))}
-          {matches.length === 0 && <p className="text-gray-400">No matches recorded yet.</p>}
+          {matches.length === 0 && <p className="text-gray-400 text-center py-6">No matches recorded yet.</p>}
         </div>
       </div>
     </div>

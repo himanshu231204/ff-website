@@ -2,9 +2,9 @@ import { Users, CalendarClock, Trophy, Skull } from 'lucide-react';
 
 function Stat({ icon: Icon, label, value, accent }) {
   return (
-    <div className="ui-card">
+    <div className="glass-card rounded-2xl p-5 border border-white/15">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-sm text-gray-400">{label}</p>
+        <p className="text-sm text-gray-300">{label}</p>
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${accent}`}>
           <Icon className="text-white" size={18} />
         </div>
@@ -22,7 +22,7 @@ export default function AdminDashboard({ players, matches, leaderboard }) {
 
   return (
     <div className="space-y-6">
-      <div className="ui-card">
+      <div className="glass-card rounded-2xl p-6 border border-white/15">
         <h2 className="text-2xl font-bold text-white">Admin Dashboard</h2>
         <p className="text-gray-400 mt-1">Monitor and manage tournament data in real time.</p>
       </div>
