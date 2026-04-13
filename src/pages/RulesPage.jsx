@@ -61,7 +61,7 @@ function RuleCard({ section, delay = 0 }) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: delay, duration: 0.5 }}
-      className="glass-card rounded-2xl p-5 sm:p-6 relative overflow-hidden"
+      className="ui-card relative overflow-hidden"
     >
       {/* Background Glow */}
       <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-${gradient.replace('from-', '').replace(' to-', '/')} opacity-10 rounded-full blur-2xl`} />
@@ -108,13 +108,13 @@ export default function RulesPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="space-y-8 lg:space-y-10"
+      className="ui-page space-y-10 mt-10"
     >
       {/* Page Header */}
       <motion.div
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="text-center py-8 sm:py-10 lg:py-12 relative"
+        className="ui-card text-center py-10 relative overflow-hidden"
       >
         {/* Ambient Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[400px] h-[150px] sm:h-[200px] bg-gradient-to-r from-yellow-500/10 to-orange-500/10 blur-[60px] sm:blur-[80px] -z-10" />
@@ -123,16 +123,16 @@ export default function RulesPage() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="inline-flex p-3 sm:p-4 bg-gradient-to-br from-yellow-500/20 to-orange-500/20 rounded-2xl mb-4 sm:mb-6 border border-yellow-500/20"
+          className="ui-header-badge mx-auto mb-6"
         >
-          <Clipboard className="text-yellow-400" size={28} sm:size={40} />
+          <Clipboard className="h-7 w-7 sm:h-10 sm:w-10 text-yellow-400" />
         </motion.div>
         
         <motion.h1
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 px-2"
+          className="ui-title mb-4"
         >
           <span className="text-yellow-400">{content.rules.title.split(' & ')[0]}</span>
           <span className="text-white"> & </span>
@@ -143,14 +143,14 @@ export default function RulesPage() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-sm sm:text-xl text-gray-400 max-w-xl mx-auto px-4"
+          className="ui-subtitle mx-auto"
         >
           {content.rules.description}
         </motion.p>
       </motion.div>
 
       {/* Rules Grid - 2 columns on desktop */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      <div className="ui-grid ui-grid-2">
         {ruleSections.map(([key, section], index) => (
           <RuleCard 
             key={key} 
@@ -165,7 +165,7 @@ export default function RulesPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="glass-card rounded-2xl p-5 sm:p-6"
+        className="ui-card"
       >
         <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <Calendar className="text-[#00F2FF]" size={20} />

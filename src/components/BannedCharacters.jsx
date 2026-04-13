@@ -33,7 +33,7 @@ export default function BannedCharacters() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-2xl overflow-hidden"
+      className="ui-card overflow-hidden"
     >
       {/* Header */}
       <div 
@@ -112,7 +112,7 @@ export default function BannedCharacters() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                      <div className="ui-grid ui-grid-3">
                         {bannedCharacters.active.map((character, index) => (
                           <CharacterCard 
                             key={character} 
@@ -156,7 +156,7 @@ export default function BannedCharacters() {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                      <div className="ui-grid ui-grid-3">
                         {bannedCharacters.passive.map((character, index) => (
                           <CharacterCard 
                             key={character} 

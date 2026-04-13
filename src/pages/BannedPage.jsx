@@ -34,13 +34,13 @@ export default function BannedPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="space-y-8 lg:space-y-10"
+      className="ui-page space-y-10 mt-10"
     >
       {/* Page Header */}
       <motion.div
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="text-center py-8 sm:py-10 lg:py-12 relative"
+        className="ui-card text-center py-10 relative overflow-hidden"
       >
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[400px] h-[150px] sm:h-[200px] bg-gradient-to-r from-red-500/10 to-orange-500/10 blur-[60px] sm:blur-[80px] -z-10" />
         
@@ -48,16 +48,16 @@ export default function BannedPage() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="inline-flex p-3 sm:p-4 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-2xl mb-4 sm:mb-6 border border-red-500/20"
+          className="ui-header-badge mx-auto mb-6"
         >
-          <UserX className="text-red-400" size={28} sm:size={40} />
+          <UserX className="h-7 w-7 sm:h-10 sm:w-10 text-red-400" />
         </motion.div>
         
         <motion.h1
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 px-2"
+          className="ui-title mb-4"
         >
           <span className="text-red-400">Banned</span>
           <span className="text-white"> Characters</span>
@@ -67,7 +67,7 @@ export default function BannedPage() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-sm sm:text-xl text-gray-400 max-w-xl mx-auto px-4"
+          className="ui-subtitle mx-auto"
         >
           Characters restricted from tournament play
         </motion.p>
@@ -78,7 +78,7 @@ export default function BannedPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="glass-card rounded-2xl overflow-hidden"
+        className="ui-card overflow-hidden"
       >
         {/* Header */}
         <div 
@@ -157,7 +157,7 @@ export default function BannedPage() {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+                        <div className="ui-grid ui-grid-3">
                           {bannedCharacters.active.map((character, index) => (
                             <CharacterCard 
                               key={character} 
@@ -201,7 +201,7 @@ export default function BannedPage() {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+                        <div className="ui-grid ui-grid-3">
                           {bannedCharacters.passive.map((character, index) => (
                             <CharacterCard 
                               key={character} 

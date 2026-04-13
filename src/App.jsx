@@ -13,11 +13,11 @@ import content from './data/content';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-[#050005] via-[#0a0a15] to-[#1A1B4B]">
+      <div className="min-h-screen w-full flex flex-col bg-pattern bg-grid">
         <Navbar />
 
-        <main className="flex-1 w-full px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
-          <div className="max-w-7xl mx-auto">
+        <main className="ui-shell flex-1">
+          <div className="mx-auto w-full max-w-7xl ui-page">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/players" element={<PlayersPage />} />
@@ -31,8 +31,8 @@ function App() {
           </div>
         </main>
 
-        <footer className="w-full border-t border-white/10 py-6 lg:py-8 flex-shrink-0">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 text-center">
+        <footer className="w-full border-t border-white/10 py-6 lg:py-8 flex-shrink-0 bg-black/10 backdrop-blur-xl">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 text-center">
             <p className="text-gray-500 text-sm">
               <span className="gradient-text font-semibold">{content.footer.text}</span> 
               <span className="text-gray-600"> © {content.footer.year}</span>

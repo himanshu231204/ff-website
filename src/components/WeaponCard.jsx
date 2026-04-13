@@ -44,13 +44,13 @@ export default function WeaponCard({ weapon, index }) {
         y: -5,
         transition: { type: "spring", stiffness: 300, damping: 20 }
       }}
-      className="group relative"
+      className="group relative h-full"
     >
       {/* Gradient Border Glow */}
       <div className="absolute -inset-0.5 bg-gradient-to-r from-[#00F2FF] via-[#7000FF] to-[#00F2FF] rounded-2xl opacity-0 group-hover:opacity-100 blur-md transition duration-500" />
       
       {/* Card Content */}
-      <div className="relative glass-card rounded-2xl p-5 hover:bg-white/[0.08] transition-all duration-300">
+      <div className="ui-card relative overflow-hidden p-5 hover:bg-white/[0.08]">
         {/* Icon Container */}
         <div className="relative mb-4">
           <div className="w-14 h-14 mx-auto rounded-xl bg-gradient-to-br from-[#00F2FF]/20 to-[#7000FF]/20 flex items-center justify-center group-hover:from-[#00F2FF]/30 group-hover:to-[#7000FF]/30 transition-all duration-300">

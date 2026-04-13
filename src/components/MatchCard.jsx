@@ -18,7 +18,7 @@ export default function MatchCard({ match, index }) {
         scale: 1.02,
         transition: { type: "spring", stiffness: 300, damping: 20 }
       }}
-      className="group relative"
+      className="group relative h-full"
     >
       {/* Enhanced Gradient Border with Glow */}
       <div className={`absolute -inset-0.5 rounded-2xl opacity-40 group-hover:opacity-100 blur-md transition duration-500 ${
@@ -28,14 +28,14 @@ export default function MatchCard({ match, index }) {
       }`} />
       
       {/* Card Content */}
-      <div className="relative glass-card rounded-2xl p-4 sm:p-5 hover:bg-white/[0.06] transition-all duration-300 overflow-hidden">
+      <div className="ui-card relative overflow-hidden p-5 sm:p-5 hover:bg-white/[0.06]">
         {/* Background Accent */}
         <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-20 transition-opacity duration-500 group-hover:opacity-30 ${
           isGroupA ? 'bg-blue-500' : 'bg-purple-500'
         }`} />
 
         {/* Top Row - Match Info */}
-        <div className="flex items-center justify-between mb-4 relative z-10">
+        <div className="flex items-center justify-between mb-4 relative z-10 gap-3">
           <div className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${isGroupA ? 'bg-blue-500' : 'bg-purple-500'} animate-pulse`} />
             <span className={`px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wider ${

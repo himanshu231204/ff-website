@@ -54,7 +54,7 @@ export default function AllowedWeapons() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-2xl overflow-hidden"
+      className="ui-card overflow-hidden"
     >
       {/* Header */}
       <div 
@@ -121,7 +121,7 @@ export default function AllowedWeapons() {
               </div>
 
               {/* Weapons Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
+              <div className="ui-grid ui-grid-3">
                 {filteredWeapons.map((weapon, index) => (
                   <WeaponCard key={weapon} weapon={weapon} index={index} />
                 ))}

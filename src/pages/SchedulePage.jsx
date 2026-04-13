@@ -73,13 +73,13 @@ export default function SchedulePage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="space-y-10 lg:space-y-14"
+      className="ui-page space-y-10 mt-10"
     >
       {/* Premium Page Header */}
       <motion.div
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="text-center py-8 sm:py-10 lg:py-12 relative"
+        className="ui-card text-center py-10 relative overflow-hidden"
       >
         {/* Enhanced Ambient Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[500px] h-[200px] sm:h-[250px] bg-gradient-to-r from-blue-500/15 via-purple-500/15 to-pink-500/15 blur-[80px] sm:blur-[100px] -z-10" />
@@ -89,7 +89,7 @@ export default function SchedulePage() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-white/10 rounded-full mb-6"
+          className="ui-header-badge mx-auto mb-6"
         >
           <Flame className="text-orange-400 animate-pulse" size={16} />
           <span className="text-orange-400 font-medium text-sm">{content.schedule.badge}</span>
@@ -99,16 +99,16 @@ export default function SchedulePage() {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.15 }}
-          className="inline-flex p-4 sm:p-5 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl mb-5 sm:mb-6 border border-white/10 shadow-2xl shadow-blue-500/10"
+          className="ui-header-badge mx-auto mb-6"
         >
-          <Calendar className="text-blue-400" size={32} sm:size={44} />
+          <Calendar className="h-8 w-8 sm:h-11 sm:w-11 text-blue-400" />
         </motion.div>
         
         <motion.h1
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4"
+          className="ui-title mb-4"
         >
           <span className="gradient-text">{content.schedule.title.split(' ')[0]}</span>
           <span className="text-white"> {content.schedule.title.split(' ').slice(1).join(' ')}</span>
@@ -118,16 +118,16 @@ export default function SchedulePage() {
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-sm sm:text-lg text-gray-400 max-w-xl mx-auto"
+          className="ui-subtitle mx-auto"
         >
           {content.schedule.description}
         </motion.p>
       </motion.div>
 
       {/* Match Schedule Grid - Enhanced Cards */}
-      <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+      <div className="ui-grid ui-grid-2 mt-10">
         {/* Group A */}
-        <div className="glass-card rounded-2xl p-5 sm:p-6 lg:p-7 relative overflow-hidden">
+        <div className="ui-card relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl" />
           <div className="relative z-10">
@@ -136,7 +136,7 @@ export default function SchedulePage() {
         </div>
 
         {/* Group B */}
-        <div className="glass-card rounded-2xl p-5 sm:p-6 lg:p-7 relative overflow-hidden">
+        <div className="ui-card relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl" />
           <div className="relative z-10">
@@ -150,7 +150,7 @@ export default function SchedulePage() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="glass-card rounded-2xl p-6 sm:p-7 lg:p-8 relative overflow-hidden"
+        className="ui-card relative overflow-hidden"
       >
         {/* Background Effects */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full blur-3xl" />
@@ -177,7 +177,7 @@ export default function SchedulePage() {
             className="relative group"
           >
             <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 rounded-2xl opacity-20 group-hover:opacity-40 blur transition duration-500" />
-            <div className="relative glass-card rounded-2xl p-5 sm:p-6 text-center border border-white/5">
+            <div className="relative ui-card text-center border border-white/5">
               <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-blue-500/30 to-purple-500/30 rounded-2xl flex items-center justify-center border border-white/10">
                 <Users className="text-blue-400" size={28} />
               </div>
@@ -198,7 +198,7 @@ export default function SchedulePage() {
             className="relative group"
           >
             <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 via-[#00F2FF] to-purple-500 rounded-2xl opacity-20 group-hover:opacity-40 blur transition duration-500" />
-            <div className="relative glass-card rounded-2xl p-5 sm:p-6 text-center border border-white/5">
+            <div className="relative ui-card text-center border border-white/5">
               <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-cyan-500/30 to-[#7000FF]/30 rounded-2xl flex items-center justify-center border border-white/10">
                 <Swords className="text-cyan-400" size={28} />
               </div>
@@ -219,7 +219,7 @@ export default function SchedulePage() {
             className="relative group"
           >
             <div className="absolute -inset-0.5 bg-gradient-to-r from-yellow-500 via-orange-500 to-red-500 rounded-2xl opacity-20 group-hover:opacity-40 blur transition duration-500" />
-            <div className="relative glass-card rounded-2xl p-5 sm:p-6 text-center border border-white/5">
+            <div className="relative ui-card text-center border border-white/5">
               <div className="w-14 h-14 mx-auto mb-4 bg-gradient-to-br from-yellow-500/30 to-orange-500/30 rounded-2xl flex items-center justify-center border border-white/10">
                 <Trophy className="text-yellow-400" size={28} />
               </div>

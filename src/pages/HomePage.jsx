@@ -11,11 +11,11 @@ import content from '../data/content';
 function StatCard({ icon: Icon, label, value, color, delay = 0 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.5 }}
       whileHover={{ scale: 1.03, y: -5 }}
-      className="glass-card rounded-2xl p-5 sm:p-6 group cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[140px]"
+      className="ui-card group cursor-pointer relative overflow-hidden min-h-[140px]"
     >
       {/* Glow Effect */}
       <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-15 transition-opacity duration-500`} />
@@ -37,7 +37,7 @@ function StatCard({ icon: Icon, label, value, color, delay = 0 }) {
 function TopPlayerCard({ player, rank }) {
   const getRankConfig = (rank) => {
     if (rank === 1) return { 
-      gradient: 'from-yellow-500 via-yellow-400 to-amber-300', 
+            gradient: 'from-yellow-500 via-yellow-400 to-amber-300',
       bgGradient: 'from-yellow-500/20 to-amber-500/10',
       glow: 'shadow-[0_0_40px_rgba(234,179,8,0.3)]',
       icon: <Crown className="text-yellow-600" size={32} />,
@@ -71,7 +71,7 @@ function TopPlayerCard({ player, rank }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: rank * 0.15, duration: 0.5 }}
       whileHover={{ scale: 1.02 }}
-      className={`glass-card rounded-2xl p-6 text-center relative overflow-hidden flex flex-col items-center justify-between min-h-[200px] ${config.glow} ${config.borderColor} border-2`}
+      className={`ui-card text-center relative overflow-hidden flex flex-col items-center justify-between min-h-[200px] ${config.glow} ${config.borderColor} border-2`}
     >
       {/* Background Gradient */}
       <div className={`absolute inset-0 bg-gradient-to-b ${config.bgGradient} to-transparent`} />
@@ -145,229 +145,110 @@ function PlayerRow({ player, idx, group }) {
 // MAIN HOMEPAGE COMPONENT
 // ============================================
 export default function HomePage() {
-  // Calculate dynamic data
   const totalPlayers = players.length;
   const totalMatches = groupAMatches.length + groupBMatches.length;
-  
-  // Get top 3 by final score
-  const groupAPlayers = players.filter(p => p.group === 'A');
-  const groupBPlayers = players.filter(p => p.group === 'B');
-  const sortedA = calculateLeaderboard(groupAPlayers);
-  const sortedB = calculateLeaderboard(groupBPlayers);
-  
-  const allSorted = [...sortedA, ...sortedB].sort((a, b) => 
-    parseFloat(b.finalScore) - parseFloat(a.finalScore)
-  ).slice(0, 3);
-  
-  const groupA = players.filter(p => p.group === 'A');
-  const groupB = players.filter(p => p.group === 'B');
+
+  const groupA = players.filter((player) => player.group === 'A');
+  const groupB = players.filter((player) => player.group === 'B');
+  const topThree = [...calculateLeaderboard(groupA), ...calculateLeaderboard(groupB)]
+    .sort((a, b) => parseFloat(b.finalScore) - parseFloat(a.finalScore))
+    .slice(0, 3);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="space-y-10 lg:space-y-14 pb-6"
-    >
-      {/* ============================================ */}
-      {/* HERO SECTION */}
-      {/* ============================================ */}
-      <motion.div
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="text-center py-12 sm:py-16 lg:py-20 relative"
-      >
-        {/* Ambient Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[500px] lg:w-[700px] h-[200px] bg-gradient-to-r from-[#00F2FF]/15 via-[#7000FF]/15 to-[#00F2FF]/15 blur-[80px] -z-10" />
-        
-        {/* Badge */}
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#00F2FF]/10 border border-[#00F2FF]/30 rounded-full mb-6"
-        >
-          <Flame className="text-[#00F2FF] animate-pulse" size={16} />
-          <span className="text-[#00F2FF] font-medium text-sm tracking-wide">{content.home.badge.text}</span>
-        </motion.div>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="ui-page space-y-10 mt-10 pb-6">
+      <section className="ui-card relative overflow-hidden text-center py-10 sm:py-12">
+        <div className="absolute inset-x-1/2 top-1/2 h-40 w-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-cyan-500/15 via-violet-500/15 to-cyan-500/15 blur-3xl" />
+        <div className="relative z-10 mx-auto max-w-3xl">
+          <div className="ui-header-badge mx-auto mb-6">
+            <Flame className="text-[#00F2FF]" size={16} />
+            <span className="text-sm font-medium text-[#00F2FF]">{content.home.badge.text}</span>
+          </div>
 
-        {/* Heading */}
-        <motion.h1
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-4"
-        >
-          <span className="text-white">{content.home.title}</span>
-          <br />
-          <span className="gradient-text text-glow">{content.home.subtitle}</span>
-        </motion.h1>
+          <h1 className="ui-title mb-4">
+            <span className="text-white">{content.home.title}</span>
+            <br />
+            <span className="gradient-text text-glow">{content.home.subtitle}</span>
+          </h1>
 
-        <motion.p
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-lg text-gray-400 max-w-xl mx-auto mb-8"
-        >
-          {content.home.description}
-        </motion.p>
+          <p className="ui-subtitle mx-auto mb-8">{content.home.description}</p>
 
-        {/* CTA Buttons */}
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-4"
-        >
-          <Link to="/players">
-            <motion.button
-              whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(0, 242, 255, 0.4)" }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-3.5 bg-gradient-to-r from-[#00F2FF] to-[#7000FF] rounded-full font-bold text-white shadow-lg shadow-[#00F2FF]/25"
-            >
-              <span className="flex items-center gap-2">
-                <Users size={18} />
-                {content.home.buttons.viewPlayers}
-              </span>
-            </motion.button>
-          </Link>
-          <Link to="/leaderboard">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-8 py-3.5 glass-card rounded-full font-bold text-white border border-white/20 hover:border-[#00F2FF]/50"
-            >
-              <span className="flex items-center gap-2">
-                <Trophy size={18} className="text-yellow-400" />
-                {content.home.buttons.leaderboard}
-              </span>
-            </motion.button>
-          </Link>
-        </motion.div>
-      </motion.div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/players" className="ui-button px-8 py-3.5">
+              <Users size={18} />
+              {content.home.buttons.viewPlayers}
+            </Link>
+            <Link to="/leaderboard" className="ui-button ui-button-muted px-8 py-3.5">
+              <Trophy size={18} className="text-yellow-400" />
+              {content.home.buttons.leaderboard}
+            </Link>
+          </div>
+        </div>
+      </section>
 
-      {/* ============================================ */}
-      {/* STATS GRID - Equal Size Cards */}
-      {/* ============================================ */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        <StatCard icon={Users} label={content.home.stats.players} value={totalPlayers} color="bg-gradient-to-br from-[#00F2FF] to-[#00D4E0]" delay={0.1} />
-        <StatCard icon={Swords} label={content.home.stats.groups} value="2" color="bg-gradient-to-br from-[#7000FF] to-[#8B5CF6]" delay={0.15} />
-        <StatCard icon={Calendar} label={content.home.stats.matches} value={totalMatches} color="bg-gradient-to-br from-pink-500 to-rose-500" delay={0.2} />
-        <StatCard icon={Trophy} label={content.home.stats.rounds} value="3" color="bg-gradient-to-br from-yellow-500 to-orange-500" delay={0.25} />
-      </div>
+      <section className="ui-grid ui-grid-4 mt-10">
+        <StatCard icon={Users} label={content.home.stats.players} value={totalPlayers} color="from-cyan-500 to-sky-500" delay={0.05} />
+        <StatCard icon={Swords} label={content.home.stats.groups} value="2" color="from-violet-500 to-purple-500" delay={0.1} />
+        <StatCard icon={Calendar} label={content.home.stats.matches} value={totalMatches} color="from-pink-500 to-rose-500" delay={0.15} />
+        <StatCard icon={Trophy} label={content.home.stats.rounds} value="3" color="from-amber-500 to-orange-500" delay={0.2} />
+      </section>
 
-      {/* ============================================ */}
-      {/* GROUPS SECTION - Equal Height Cards */}
-      {/* ============================================ */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Group A */}
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3 }}
-          className="glass-card rounded-2xl p-6 relative overflow-hidden flex flex-col"
-        >
-          <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl" />
-          
-          <div className="flex items-center gap-4 mb-6 relative z-10">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+      <section className="ui-grid ui-grid-2 mt-10">
+        <div className="ui-card relative overflow-hidden">
+          <div className="absolute right-0 top-0 h-36 w-36 rounded-full bg-blue-500/10 blur-3xl" />
+          <div className="relative z-10 mb-5 flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/20">
               <Target className="text-white" size={22} />
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <h2 className="text-xl font-bold text-white">{content.home.sections.groupA}</h2>
-              <p className="text-gray-500 text-sm">{groupA.length} {content.home.stats.groups.toLowerCase()}</p>
+              <p className="text-sm text-gray-400">{groupA.length} players</p>
             </div>
-            <span className="px-3 py-1.5 bg-blue-500/20 border border-blue-500/30 rounded-full text-sm text-blue-400 font-medium">
-              {groupA.length} Players
-            </span>
           </div>
-          
-          <div className="space-y-1 flex-1">
+          <div className="relative z-10 space-y-3">
             {groupA.map((player, idx) => (
               <PlayerRow key={player.id} player={player} idx={idx} group="A" />
             ))}
           </div>
-        </motion.div>
+        </div>
 
-        {/* Group B */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.35 }}
-          className="glass-card rounded-2xl p-6 relative overflow-hidden flex flex-col"
-        >
-          <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl" />
-          
-          <div className="flex items-center gap-4 mb-6 relative z-10">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+        <div className="ui-card relative overflow-hidden">
+          <div className="absolute right-0 top-0 h-36 w-36 rounded-full bg-purple-500/10 blur-3xl" />
+          <div className="relative z-10 mb-5 flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg shadow-purple-500/20">
               <Target className="text-white" size={22} />
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <h2 className="text-xl font-bold text-white">{content.home.sections.groupB}</h2>
-              <p className="text-gray-500 text-sm">{groupB.length} {content.home.stats.groups.toLowerCase()}</p>
+              <p className="text-sm text-gray-400">{groupB.length} players</p>
             </div>
-            <span className="px-3 py-1.5 bg-purple-500/20 border border-purple-500/30 rounded-full text-sm text-purple-400 font-medium">
-              {groupB.length} Players
-            </span>
           </div>
-          
-          <div className="space-y-1 flex-1">
+          <div className="relative z-10 space-y-3">
             {groupB.map((player, idx) => (
               <PlayerRow key={player.id} player={player} idx={idx} group="B" />
             ))}
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </section>
 
-      {/* ============================================ */}
-      {/* TOP PLAYERS - 3 Equal Cards */}
-      {/* ============================================ */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden"
-      >
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-yellow-500/5 to-purple-500/5 rounded-full blur-3xl" />
-        
-        <div className="flex items-center gap-3 mb-6 relative z-10">
+      <section className="ui-card relative overflow-hidden mt-10">
+        <div className="absolute right-0 top-0 h-52 w-52 rounded-full bg-yellow-500/5 blur-3xl" />
+        <div className="relative z-10 mb-6 flex items-center gap-3">
           <Trophy className="text-yellow-500" size={24} />
           <h2 className="text-xl sm:text-2xl font-bold text-white">{content.home.sections.topPlayers}</h2>
-          <span className="ml-auto px-3 py-1 bg-yellow-500/20 border border-yellow-500/30 rounded-full text-xs text-yellow-400 font-medium">
-            Top 3
-          </span>
+          <span className="ml-auto rounded-full border border-yellow-500/30 bg-yellow-500/20 px-3 py-1 text-xs font-medium text-yellow-400">Top 3</span>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {allSorted.map((player, idx) => (
+        <div className="ui-grid ui-grid-3">
+          {topThree.map((player, idx) => (
             <TopPlayerCard key={player.id} player={player} rank={idx + 1} />
           ))}
         </div>
-      </motion.div>
+      </section>
 
-      {/* ============================================ */}
-      {/* QUICK LINKS - Action Buttons */}
-      {/* ============================================ */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
-        className="flex flex-wrap justify-center gap-4 pt-4"
-      >
-        <Link to="/schedule" className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40">
-          <Calendar size={18} />
-          {content.home.quickLinks.schedule}
-        </Link>
-        <Link to="/weapons" className="px-6 py-3 bg-gradient-to-r from-[#00F2FF] to-[#7000FF] hover:from-[#00E5ED] hover:to-[#8B5CF6] rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shadow-[#00F2FF]/20 hover:shadow-[#00F2FF]/40">
-          <Swords size={18} />
-          {content.home.quickLinks.weapons}
-        </Link>
-        <Link to="/banned" className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 rounded-full font-semibold transition-all duration-300 flex items-center gap-2 shadow-lg shadow-red-500/20 hover:shadow-red-500/40">
-          <Users size={18} />
-          {content.home.quickLinks.banned}
-        </Link>
-      </motion.div>
+      <div className="mt-10 flex flex-wrap justify-center gap-4">
+        <Link to="/schedule" className="ui-button px-6 py-3"><Calendar size={18} />{content.home.quickLinks.schedule}</Link>
+        <Link to="/weapons" className="ui-button px-6 py-3"><Swords size={18} />{content.home.quickLinks.weapons}</Link>
+        <Link to="/banned" className="ui-button ui-button-danger px-6 py-3"><Users size={18} />{content.home.quickLinks.banned}</Link>
+      </div>
     </motion.div>
   );
 }

@@ -17,13 +17,13 @@ export default function CharacterCard({ character, type, index }) {
         scale: 1.05,
         transition: { type: "spring", stiffness: 300, damping: 20 }
       }}
-      className="group relative"
+      className="group relative h-full"
     >
       {/* Glow Border */}
       <div className={`absolute -inset-0.5 bg-gradient-to-r ${isActive ? 'from-red-600 via-red-500 to-red-600' : 'from-orange-500 via-orange-400 to-orange-500'} rounded-xl opacity-30 group-hover:opacity-100 blur-md group-hover:blur transition duration-500`} />
       
       {/* Card Content */}
-      <div className={`relative glass-card rounded-xl p-4 transition-all duration-300 ${isActive ? 'hover:bg-red-500/10' : 'hover:bg-orange-500/10'}`}>
+      <div className={`ui-card relative overflow-hidden p-5 transition-all duration-300 ${isActive ? 'hover:bg-red-500/10' : 'hover:bg-orange-500/10'}`}>
         {/* Icon */}
         <div className="relative mb-3">
           <div className={`w-12 h-12 mx-auto rounded-lg bg-gradient-to-br ${isActive ? 'from-red-600/30 to-red-800/30' : 'from-orange-500/30 to-orange-600/30'} flex items-center justify-center group-hover:scale-110 transition-all duration-300`}>

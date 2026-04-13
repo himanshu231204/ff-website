@@ -16,20 +16,20 @@ export default function PlayerCard({ player, index }) {
         y: -8,
         transition: { type: "spring", stiffness: 300, damping: 20 }
       }}
-      className="group relative"
+      className="group relative h-full"
     >
       {/* Gradient Border Glow */}
       <div className="absolute -inset-0.5 bg-gradient-to-r from-[#00F2FF] via-[#7000FF] to-[#00F2FF] rounded-2xl opacity-0 group-hover:opacity-100 blur-md transition duration-500" />
       
       {/* Card Content */}
-      <div className="relative glass-card rounded-2xl p-4 sm:p-6 hover:bg-white/[0.08] transition-all duration-300">
+      <div className="ui-card relative overflow-hidden p-5 sm:p-6 hover:bg-white/[0.08]">
         {/* Avatar Container */}
         <div className="relative mb-4 sm:mb-5">
           {/* Avatar Glow Ring */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#00F2FF] to-[#7000FF] rounded-full opacity-0 group-hover:opacity-50 blur-xl transition-all duration-500" />
           
           <div className="w-16 sm:w-20 h-16 sm:h-20 mx-auto rounded-full bg-gradient-to-br from-[#00F2FF]/20 to-[#7000FF]/20 flex items-center justify-center border-2 border-white/10 group-hover:border-[#00F2FF]/50 transition-all duration-300">
-            <User className="text-[#00F2FF] group-hover:text-white transition-colors duration-300" size={28} sm:size={36} />
+            <User className="h-7 w-7 sm:h-9 sm:w-9 text-[#00F2FF] group-hover:text-white transition-colors duration-300" />
           </div>
           
           {/* Level Badge */}
@@ -40,7 +40,7 @@ export default function PlayerCard({ player, index }) {
             className="absolute -bottom-1 left-1/2 -translate-x-1/2"
           >
             <span className="flex items-center gap-1 px-2.5 sm:px-3 py-1 bg-gradient-to-r from-[#00F2FF] to-[#7000FF] rounded-full text-xs font-bold text-white shadow-lg shadow-[#00F2FF]/30">
-              <Zap size={10} sm:size={12} className="animate-pulse" />
+              <Zap size={10} className="animate-pulse" />
               <span className="hidden sm:inline">LVL</span> {player.level}
             </span>
           </motion.div>

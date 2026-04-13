@@ -65,9 +65,9 @@ export default function LeaderboardTable({ players }) {
   };
 
   return (
-    <div className="glass-card rounded-2xl overflow-hidden">
+    <div className="ui-card overflow-hidden p-0">
       {/* Table Header */}
-      <div className="hidden md:grid md:grid-cols-8 gap-4 p-4 bg-white/5 border-b border-white/10">
+      <div className="hidden md:grid md:grid-cols-8 gap-4 px-5 py-4 bg-white/5 border-b border-white/10">
         <button 
           onClick={() => handleSort('rank')}
           className="text-left text-gray-400 font-semibold text-sm hover:text-white transition-colors"
@@ -124,7 +124,7 @@ export default function LeaderboardTable({ players }) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className={`grid grid-cols-2 md:grid-cols-8 gap-2 md:gap-4 p-4 hover:bg-white/10 transition-all duration-300 group ${
+                className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-8 gap-3 px-5 py-4 hover:bg-white/10 transition-all duration-300 group ${
                   rank <= 3 ? 'bg-gradient-to-r from-white/5 to-transparent' : ''
                 }`}
               >

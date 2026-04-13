@@ -19,7 +19,7 @@ function MatchCard({ match, stage }) {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className={`glass-card rounded-xl p-4 border-2 ${getStageStyles(stage)}`}
+      className={`ui-card border-2 ${getStageStyles(stage)}`}
     >
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-medium text-gray-400 uppercase">{stage}</span>
@@ -84,18 +84,18 @@ export default function KnockoutPage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="space-y-8"
+      className="ui-page space-y-10 mt-10"
     >
       <div>
-        <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+        <h1 className="ui-title text-3xl flex items-center gap-3">
           <Swords className="text-purple-500" />
           Knockout Stage
         </h1>
-        <p className="text-gray-400">Semi Finals → Grand Final</p>
+        <p className="ui-subtitle">Semi Finals → Grand Final</p>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="glass-card rounded-xl p-6">
+      <div className="ui-grid ui-grid-2">
+        <div className="ui-card">
           <div className="flex items-center gap-2 mb-4">
             <Users className="text-purple-400" size={24} />
             <h2 className="text-xl font-bold text-white">Top 4 - Group A</h2>
@@ -123,7 +123,7 @@ export default function KnockoutPage() {
           </div>
         </div>
 
-        <div className="glass-card rounded-xl p-6">
+        <div className="ui-card">
           <div className="flex items-center gap-2 mb-4">
             <Users className="text-blue-400" size={24} />
             <h2 className="text-xl font-bold text-white">Top 4 - Group B</h2>
@@ -152,13 +152,13 @@ export default function KnockoutPage() {
         </div>
       </div>
 
-      <div className="glass-card rounded-xl p-6">
+      <div className="ui-card">
         <div className="flex items-center gap-2 mb-6">
           <Trophy className="text-yellow-500" size={24} />
           <h2 className="text-xl font-bold text-white">Knockout Bracket</h2>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-4">
+        <div className="ui-grid ui-grid-3">
           <div className="space-y-4">
             <h3 className="text-center font-semibold text-purple-400">Semi Finals</h3>
             {semiFinalMatches.map((match) => (
@@ -177,7 +177,7 @@ export default function KnockoutPage() {
         </div>
       </div>
 
-      <div className="glass-card rounded-xl p-6 border-2 border-yellow-500/30">
+      <div className="ui-card border-2 border-yellow-500/30">
         <div className="flex items-center gap-3 mb-4">
           <Crown className="text-yellow-500" size={32} />
           <h2 className="text-2xl font-bold text-white">Tournament Champion</h2>
