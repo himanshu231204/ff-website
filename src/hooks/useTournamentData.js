@@ -8,6 +8,8 @@ const STORAGE_KEYS = {
   SETTINGS: 'tournament_settings',
 };
 
+const STORAGE_SYNC_EVENT = 'tournament_data_sync';
+
 const DEFAULT_PLAYERS = [
   {
     id: 1,
@@ -168,6 +170,91 @@ function resolveWinnerFromScores(player1, player2, score1, score2, winnerFallbac
   return winnerFallback || null;
 }
 
+function isMatchCompleted(match) {
+  const score1 = Number(match.score1 ?? 0);
+  const score2 = Number(match.score2 ?? 0);
+  const winner = match.winner;
+
+  if (!winner || score1 === score2) return false;
+  return winner === match.player1 || winner === match.player2;
+}
+
+function toPairKey(player1, player2) {
+  return [player1, player2].sort((a, b) => a.localeCompare(b)).join('::');
+}
+
+function generateGroupStageFixtures(group, groupPlayers, completedPairs, startOffset = 0) {
+  const names = [...new Set(groupPlayers.map((p) => p.name).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const now = Date.now();
+  const fixtures = [];
+  let offset = startOffset;
+
+  for (let i = 0; i < names.length; i += 1) {
+    for (let j = i + 1; j < names.length; j += 1) {
+      const player1 = names[i];
+      const player2 = names[j];
+      const pairKey = toPairKey(player1, player2);
+
+      if (completedPairs.has(pairKey)) continue;
+
+      fixtures.push({
+        id: `sched_${group}_${pairKey}_${offset}_${now}`,
+        player1,
+        player2,
+        score1: 0,
+        score2: 0,
+        winner: null,
+        scoreDifference: 0,
+        stage: 'group',
+        group,
+        round: offset + 1,
+        isAutoScheduled: true,
+        scheduledAt: new Date(now + (offset + 1) * 3600000).toISOString(),
+        createdAt: new Date(now).toISOString(),
+        updatedAt: new Date(now).toISOString(),
+      });
+
+      offset += 1;
+    }
+  }
+
+  return fixtures;
+}
+
+function ensureGroupStageSchedule(playerList, matchList) {
+  const playerGroupMap = new Map(playerList.map((p) => [p.name, p.group]));
+  const groups = [...new Set(playerList.map((p) => p.group).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+
+  const groupMatches = matchList.filter((m) => (m.stage || 'group') === 'group');
+  const completedGroupMatches = groupMatches.filter(isMatchCompleted).map((m) => ({
+    ...m,
+    group: m.group || playerGroupMap.get(m.player1) || playerGroupMap.get(m.player2) || 'A',
+    isAutoScheduled: Boolean(m.isAutoScheduled),
+  }));
+
+  const completedPairMap = new Map(groups.map((group) => [group, new Set()]));
+  completedGroupMatches.forEach((m) => {
+    const group = m.group || 'A';
+    if (!completedPairMap.has(group)) {
+      completedPairMap.set(group, new Set());
+    }
+    completedPairMap.get(group).add(toPairKey(m.player1, m.player2));
+  });
+
+  const otherStageMatches = matchList.filter((m) => (m.stage || 'group') !== 'group');
+
+  let offset = 0;
+  const scheduledGroupMatches = groups.flatMap((group) => {
+    const groupPlayers = playerList.filter((p) => p.group === group);
+    const completedPairs = completedPairMap.get(group) || new Set();
+    const fixtures = generateGroupStageFixtures(group, groupPlayers, completedPairs, offset);
+    offset += fixtures.length;
+    return fixtures;
+  });
+
+  return [...otherStageMatches, ...completedGroupMatches, ...scheduledGroupMatches];
+}
+
 function normalizeMatch(match) {
   const score1 = Number(match.score1 ?? match.kills?.[match.player1] ?? 0);
   const score2 = Number(match.score2 ?? match.kills?.[match.player2] ?? 0);
@@ -183,6 +270,9 @@ function normalizeMatch(match) {
     winner,
     scoreDifference: Math.abs(score1 - score2),
     stage: match.stage || 'group',
+    group: match.group || null,
+    round: Number(match.round || 0),
+    isAutoScheduled: Boolean(match.isAutoScheduled),
     scheduledAt: match.scheduledAt || match.timestamp || now,
     createdAt: match.createdAt || match.timestamp || now,
     updatedAt: match.updatedAt || now,
@@ -198,6 +288,8 @@ function computePlayersFromMatches(basePlayers, matches) {
   const byName = new Map(nextPlayers.map((p) => [p.name, p]));
 
   matches.forEach((match) => {
+    if (!isMatchCompleted(match)) return;
+
     const p1 = byName.get(match.player1);
     const p2 = byName.get(match.player2);
     if (!p1 || !p2) return;
@@ -234,6 +326,7 @@ function toMatchPayload(matchData) {
     score1,
     score2,
     stage,
+    group,
     scheduledAt,
     createdAt,
     updatedAt,
@@ -253,6 +346,7 @@ function toMatchPayload(matchData) {
     score2: parsedScore2,
     scoreDifference: Math.abs(parsedScore1 - parsedScore2),
     stage: stage || 'group',
+    group: group || null,
     scheduledAt: scheduledAt || now,
     createdAt: createdAt || now,
     updatedAt: updatedAt || now,
@@ -277,7 +371,11 @@ export function useTournamentData() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
+  const emitStorageSync = useCallback(() => {
+    window.dispatchEvent(new CustomEvent(STORAGE_SYNC_EVENT));
+  }, []);
+
+  const hydrateFromStorage = useCallback(() => {
     const rawPlayers = safeParse(localStorage.getItem(STORAGE_KEYS.PLAYERS), DEFAULT_PLAYERS);
     const rawMatches = safeParse(localStorage.getItem(STORAGE_KEYS.MATCHES), []);
     const savedPlayers = rawPlayers.map(normalizePlayer);
@@ -294,43 +392,82 @@ export function useTournamentData() {
       nkrPrecision: Number(loadedSettings.nkrPrecision ?? loadedSettings.killRatePrecision ?? DEFAULT_SETTINGS.nkrPrecision),
     };
 
-    const normalizedPlayers = computePlayersFromMatches(savedPlayers, savedMatches);
+    const normalizedMatches = ensureGroupStageSchedule(savedPlayers, savedMatches);
+    const normalizedPlayers = computePlayersFromMatches(savedPlayers, normalizedMatches);
+
     setPlayers(normalizedPlayers);
-    setMatches(savedMatches);
+    setMatches(normalizedMatches);
     setWeapons(savedWeapons);
     setBannedCharacters(savedBanned);
     setSettings({ ...DEFAULT_SETTINGS, ...savedSettings });
 
-    localStorage.setItem(STORAGE_KEYS.PLAYERS, JSON.stringify(normalizedPlayers));
-    setIsLoaded(true);
+    const playersString = JSON.stringify(normalizedPlayers);
+    if (localStorage.getItem(STORAGE_KEYS.PLAYERS) !== playersString) {
+      localStorage.setItem(STORAGE_KEYS.PLAYERS, playersString);
+    }
+
+    const matchesString = JSON.stringify(normalizedMatches);
+    if (localStorage.getItem(STORAGE_KEYS.MATCHES) !== matchesString) {
+      localStorage.setItem(STORAGE_KEYS.MATCHES, matchesString);
+    }
   }, []);
+
+  useEffect(() => {
+    hydrateFromStorage();
+    setIsLoaded(true);
+  }, [hydrateFromStorage]);
+
+  useEffect(() => {
+    const handleStorage = (event) => {
+      if (!event.key || Object.values(STORAGE_KEYS).includes(event.key)) {
+        hydrateFromStorage();
+      }
+    };
+
+    const handleLocalSync = () => {
+      hydrateFromStorage();
+    };
+
+    window.addEventListener('storage', handleStorage);
+    window.addEventListener(STORAGE_SYNC_EVENT, handleLocalSync);
+
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      window.removeEventListener(STORAGE_SYNC_EVENT, handleLocalSync);
+    };
+  }, [hydrateFromStorage]);
 
   const savePlayers = useCallback((nextPlayers) => {
     setPlayers(nextPlayers);
     localStorage.setItem(STORAGE_KEYS.PLAYERS, JSON.stringify(nextPlayers));
-  }, []);
+    emitStorageSync();
+  }, [emitStorageSync]);
 
   const saveMatches = useCallback((nextMatches, basePlayers = players) => {
     setMatches(nextMatches);
     localStorage.setItem(STORAGE_KEYS.MATCHES, JSON.stringify(nextMatches));
     const recomputed = computePlayersFromMatches(basePlayers, nextMatches);
     savePlayers(recomputed);
-  }, [players, savePlayers]);
+    emitStorageSync();
+  }, [players, savePlayers, emitStorageSync]);
 
   const saveWeapons = useCallback((nextWeapons) => {
     setWeapons(nextWeapons);
     localStorage.setItem(STORAGE_KEYS.WEAPONS, JSON.stringify(nextWeapons));
-  }, []);
+    emitStorageSync();
+  }, [emitStorageSync]);
 
   const saveBannedCharacters = useCallback((nextBanned) => {
     setBannedCharacters(nextBanned);
     localStorage.setItem(STORAGE_KEYS.BANNED_CHARACTERS, JSON.stringify(nextBanned));
-  }, []);
+    emitStorageSync();
+  }, [emitStorageSync]);
 
   const saveSettings = useCallback((nextSettings) => {
     setSettings(nextSettings);
     localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(nextSettings));
-  }, []);
+    emitStorageSync();
+  }, [emitStorageSync]);
 
   const addPlayer = useCallback((playerData) => {
     const newPlayer = {
@@ -341,9 +478,10 @@ export function useTournamentData() {
       stats: { ...DEFAULT_STATS },
     };
     const nextPlayers = [...players, newPlayer];
-    savePlayers(nextPlayers);
+    const nextMatches = ensureGroupStageSchedule(nextPlayers, matches);
+    saveMatches(nextMatches, nextPlayers);
     return newPlayer;
-  }, [players, savePlayers]);
+  }, [players, matches, saveMatches]);
 
   const updatePlayer = useCallback((id, updates) => {
     const player = players.find((p) => p.id === id);
@@ -360,16 +498,21 @@ export function useTournamentData() {
       };
     });
 
-    if (updates.name && updates.name.trim() !== player.name) {
+    const isRenamed = Boolean(updates.name && updates.name.trim() !== player.name);
+    const groupChanged = Boolean(updates.group && updates.group !== player.group);
+
+    if (isRenamed || groupChanged) {
       const renamedMatches = matches.map((m) => {
         const updatedMatch = { ...m };
-        if (m.player1 === player.name) updatedMatch.player1 = updates.name.trim();
-        if (m.player2 === player.name) updatedMatch.player2 = updates.name.trim();
-        if (m.winner === player.name) updatedMatch.winner = updates.name.trim();
+        if (isRenamed) {
+          if (m.player1 === player.name) updatedMatch.player1 = updates.name.trim();
+          if (m.player2 === player.name) updatedMatch.player2 = updates.name.trim();
+          if (m.winner === player.name) updatedMatch.winner = updates.name.trim();
+        }
         return updatedMatch;
       });
-      savePlayers(nextPlayers);
-      saveMatches(renamedMatches, nextPlayers);
+      const refreshedMatches = ensureGroupStageSchedule(nextPlayers, renamedMatches);
+      saveMatches(refreshedMatches, nextPlayers);
       return;
     }
 
@@ -380,22 +523,29 @@ export function useTournamentData() {
     const target = players.find((p) => p.id === id);
     if (!target) return;
     const nextPlayers = players.filter((p) => p.id !== id);
-    const nextMatches = matches.filter(
+    const matchesWithoutDeletedPlayer = matches.filter(
       (m) => m.player1 !== target.name && m.player2 !== target.name,
     );
-    savePlayers(nextPlayers);
+    const nextMatches = ensureGroupStageSchedule(nextPlayers, matchesWithoutDeletedPlayer);
     saveMatches(nextMatches, nextPlayers);
-  }, [players, matches, savePlayers, saveMatches]);
+  }, [players, matches, saveMatches]);
 
   const addMatch = useCallback((matchData) => {
-    const newMatch = toMatchPayload(matchData);
+    const player1 = players.find((p) => p.name === matchData.player1Name);
+    const player2 = players.find((p) => p.name === matchData.player2Name);
+    const inferredGroup = player1 && player2 && player1.group === player2.group ? player1.group : null;
+
+    const newMatch = toMatchPayload({
+      ...matchData,
+      group: matchData.group || inferredGroup,
+    });
     if (newMatch.score1 === newMatch.score2) {
       throw new Error('Score cannot be tied.');
     }
-    const nextMatches = [...matches, newMatch];
+    const nextMatches = ensureGroupStageSchedule(players, [...matches, newMatch]);
     saveMatches(nextMatches);
     return newMatch;
-  }, [matches, saveMatches]);
+  }, [players, matches, saveMatches]);
 
   const updateMatch = useCallback((matchId, updates) => {
     const current = matches.find((m) => m.id === matchId);
@@ -403,13 +553,21 @@ export function useTournamentData() {
 
     const nextMatches = matches.map((m) => {
       if (m.id !== matchId) return m;
+
+      const nextPlayer1 = updates.player1Name || m.player1;
+      const nextPlayer2 = updates.player2Name || m.player2;
+      const p1 = players.find((p) => p.name === nextPlayer1);
+      const p2 = players.find((p) => p.name === nextPlayer2);
+      const inferredGroup = p1 && p2 && p1.group === p2.group ? p1.group : m.group;
+
       return toMatchPayload({
         id: m.id,
-        player1Name: updates.player1Name || m.player1,
-        player2Name: updates.player2Name || m.player2,
+        player1Name: nextPlayer1,
+        player2Name: nextPlayer2,
         score1: updates.score1 ?? m.score1,
         score2: updates.score2 ?? m.score2,
         stage: updates.stage || m.stage,
+        group: updates.group || inferredGroup,
         scheduledAt: updates.scheduledAt || m.scheduledAt,
         createdAt: m.createdAt,
         updatedAt: new Date().toISOString(),
@@ -421,13 +579,14 @@ export function useTournamentData() {
       throw new Error('Score cannot be tied.');
     }
 
-    saveMatches(nextMatches);
-  }, [matches, saveMatches]);
+    const refreshedMatches = ensureGroupStageSchedule(players, nextMatches);
+    saveMatches(refreshedMatches);
+  }, [players, matches, saveMatches]);
 
   const deleteMatch = useCallback((matchId) => {
-    const nextMatches = matches.filter((m) => m.id !== matchId);
+    const nextMatches = ensureGroupStageSchedule(players, matches.filter((m) => m.id !== matchId));
     saveMatches(nextMatches);
-  }, [matches, saveMatches]);
+  }, [players, matches, saveMatches]);
 
   const addWeapon = useCallback((weaponName) => {
     const cleanName = weaponName.trim();
@@ -496,12 +655,12 @@ export function useTournamentData() {
 
   const startNewTournament = useCallback(() => {
     const freshPlayers = DEFAULT_PLAYERS.map((p) => ({ ...p }));
-    savePlayers(freshPlayers);
-    saveMatches([], freshPlayers);
+    const freshMatches = ensureGroupStageSchedule(freshPlayers, []);
+    saveMatches(freshMatches, freshPlayers);
     saveWeapons(DEFAULT_WEAPONS);
     saveBannedCharacters(DEFAULT_BANNED_CHARACTERS);
     saveSettings(DEFAULT_SETTINGS);
-  }, [savePlayers, saveMatches, saveWeapons, saveBannedCharacters, saveSettings]);
+  }, [saveMatches, saveWeapons, saveBannedCharacters, saveSettings]);
 
   const exportPlayers = useCallback(() => {
     downloadJsonFile('players.json', players);

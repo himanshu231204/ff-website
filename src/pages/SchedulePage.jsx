@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 import { Calendar, Users, Trophy, Swords, Zap, Target, Flame } from 'lucide-react';
-import { groupAMatches, groupBMatches } from '../data/matches';
+import { useTournamentData } from '../hooks/useTournamentData';
 import MatchCard from '../components/MatchCard';
 import content from '../data/content';
 
@@ -68,6 +69,38 @@ function MatchGroup({ title, matches, group, delayStart = 0 }) {
 }
 
 export default function SchedulePage() {
+  const { matches, players } = useTournamentData();
+
+  const playerGroupMap = useMemo(() => new Map(players.map((p) => [p.name, p.group])), [players]);
+
+  const groupMatches = useMemo(() => {
+    return matches
+      .filter((match) => (match.stage || 'group') === 'group')
+      .map((match) => ({
+        ...match,
+        group: match.group || playerGroupMap.get(match.player1) || playerGroupMap.get(match.player2) || 'A',
+      }))
+      .sort((a, b) => new Date(a.scheduledAt || a.createdAt) - new Date(b.scheduledAt || b.createdAt));
+  }, [matches, playerGroupMap]);
+
+  const groupAMatches = useMemo(
+    () => groupMatches.filter((match) => match.group === 'A'),
+    [groupMatches],
+  );
+  const groupBMatches = useMemo(
+    () => groupMatches.filter((match) => match.group === 'B'),
+    [groupMatches],
+  );
+
+  const semiFinalMatches = useMemo(
+    () => matches.filter((match) => match.stage === 'semi'),
+    [matches],
+  );
+  const finalMatches = useMemo(
+    () => matches.filter((match) => match.stage === 'final'),
+    [matches],
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -205,7 +238,7 @@ export default function SchedulePage() {
               <h3 className="font-bold text-white text-lg mb-2">{content.schedule.format.semiFinals.title}</h3>
               <p className="text-gray-500 text-sm mb-3">{content.schedule.format.semiFinals.description}</p>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-cyan-500/20 rounded-full">
-                <span className="text-cyan-400 font-bold">2</span>
+                <span className="text-cyan-400 font-bold">{semiFinalMatches.length}</span>
                 <span className="text-gray-400 text-xs">{content.schedule.format.semiFinals.title}</span>
               </div>
             </div>
@@ -226,7 +259,7 @@ export default function SchedulePage() {
               <h3 className="font-bold text-white text-lg mb-2">{content.schedule.format.grandFinal.title}</h3>
               <p className="text-gray-500 text-sm mb-3">{content.schedule.format.grandFinal.description}</p>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-yellow-500/20 rounded-full">
-                <span className="text-yellow-400 font-bold">1</span>
+                <span className="text-yellow-400 font-bold">{finalMatches.length}</span>
                 <span className="text-gray-400 text-xs">{content.schedule.format.grandFinal.title}</span>
               </div>
             </div>
