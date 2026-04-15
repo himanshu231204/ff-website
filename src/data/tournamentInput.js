@@ -50,7 +50,7 @@ export const scheduleStatusInput = {
   groupB: [
     { id: 1, allowStart: null },
     { id: 2, allowStart: null },
-    { id: 3, allowStart: null },
+    { id: 3, allowStart: true },
     { id: 4, allowStart: null },
     { id: 5, allowStart: null },
     { id: 6, allowStart: null },
