@@ -74,7 +74,7 @@ function GroupBlock({ label, accent, playersList }) {
 
 export default function LeaderboardPage() {
   const [filter, setFilter] = useState('all');
-  const { players, getGroupLeaderboard } = useTournamentData();
+  const { players, leaderboard, getGroupLeaderboard } = useTournamentData();
 
   const groupAPlayers = getGroupLeaderboard('A');
   const groupBPlayers = getGroupLeaderboard('B');
@@ -124,6 +124,8 @@ export default function LeaderboardPage() {
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-yellow-400">Rank:</span> <span className="text-gray-300">Points DESC, then NKR DESC</span></div>
         </div>
       </section>
+
+      <GroupBlock label="Overall Leaderboard" accent="bg-yellow-500" playersList={leaderboard} />
 
       {(filter === 'all' || filter === 'A') && <GroupBlock label="Group A" accent="bg-blue-500" playersList={groupAPlayers} />}
       {(filter === 'all' || filter === 'B') && <GroupBlock label="Group B" accent="bg-purple-500" playersList={groupBPlayers} />}
