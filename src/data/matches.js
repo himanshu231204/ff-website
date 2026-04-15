@@ -58,6 +58,71 @@ export const knockoutMatches = {
 };
 
 // --------------------------------------------
+// SCHEDULE UI OPTIONS (Developer Friendly)
+// --------------------------------------------
+export const scheduleUiOptions = {
+  // JSON-style config for developers: manage Group A and Group B matches here.
+  // Set allowStart manually:
+  // null -> not set yet (treated as Pending)
+  // false -> Pending
+  // true -> Match Played
+  matchControls: {
+    groupA: [
+      { id: 1, allowStart: null },
+      { id: 2, allowStart: null },
+      { id: 3, allowStart: null },
+      { id: 4, allowStart: null },
+      { id: 5, allowStart: null },
+      { id: 6, allowStart: null },
+      { id: 7, allowStart: null },
+      { id: 8, allowStart: null },
+      { id: 9, allowStart: null },
+      { id: 10, allowStart: null },
+    ],
+    groupB: [
+      { id: 11, allowStart: null },
+      { id: 12, allowStart: null },
+      { id: 13, allowStart: true },
+      { id: 14, allowStart: null },
+      { id: 15, allowStart: null },
+      { id: 16, allowStart: null },
+      { id: 17, allowStart: null },
+      { id: 18, allowStart: null },
+      { id: 19, allowStart: null },
+      { id: 20, allowStart: null },
+    ],
+  },
+  statusLabels: {
+    pending: 'Pending',
+    played: 'Match Played',
+  },
+};
+
+const getMatchControl = (match, matchIndex = 0) => {
+  const directId = Number(match?.id);
+  const fallbackMatchNumber = matchIndex + 1;
+  const matchNumber = Number.isFinite(directId) ? directId : fallbackMatchNumber;
+  const groupKey = match?.group === 'B' ? 'groupB' : 'groupA';
+  const groupConfig = scheduleUiOptions.matchControls[groupKey] || [];
+  return groupConfig.find((item) => Number(item.id) === matchNumber) || null;
+};
+
+export const getScheduleDisplayStatus = (match, matchIndex = 0) => {
+  const control = getMatchControl(match, matchIndex);
+
+  if (control?.allowStart === true) return 'played';
+  if (control?.allowStart === false || control?.allowStart === null) return 'pending';
+
+  if (match?.winner) return 'played';
+  return 'pending';
+};
+
+export const isScheduleStartEnabled = (match, matchIndex = 0) => {
+  const control = getMatchControl(match, matchIndex);
+  return control?.allowStart === null;
+};
+
+// --------------------------------------------
 // HELPER FUNCTIONS
 // --------------------------------------------
 

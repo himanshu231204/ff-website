@@ -1,9 +1,14 @@
 import { motion } from 'framer-motion';
-import { Crosshair, Clock, Zap, CheckCircle, XCircle } from 'lucide-react';
+import { Clock, CheckCircle } from 'lucide-react';
+import {
+  getScheduleDisplayStatus,
+  scheduleUiOptions,
+} from '../data/matches';
 
 export default function MatchCard({ match, index }) {
   const isGroupA = match.group === 'A';
   const isCompleted = match.winner !== null;
+  const status = getScheduleDisplayStatus(match, index);
   
   return (
     <motion.div
@@ -47,15 +52,15 @@ export default function MatchCard({ match, index }) {
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            {isCompleted ? (
+            {status === 'played' ? (
               <div className="flex items-center gap-1 text-green-400">
                 <CheckCircle size={12} />
-                <span className="text-xs">Completed</span>
+                <span className="text-xs">{scheduleUiOptions.statusLabels.played}</span>
               </div>
             ) : (
               <div className="flex items-center gap-1.5 text-gray-500">
                 <Clock size={12} />
-                <span className="text-xs">Round {match.round || 1}</span>
+                <span className="text-xs">{scheduleUiOptions.statusLabels.pending}</span>
               </div>
             )}
           </div>

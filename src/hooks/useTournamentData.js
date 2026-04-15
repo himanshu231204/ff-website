@@ -273,6 +273,7 @@ function normalizeMatch(match) {
     group: match.group || null,
     round: Number(match.round || 0),
     isAutoScheduled: Boolean(match.isAutoScheduled),
+    startedAt: match.startedAt || null,
     scheduledAt: match.scheduledAt || match.timestamp || now,
     createdAt: match.createdAt || match.timestamp || now,
     updatedAt: match.updatedAt || now,
@@ -327,6 +328,7 @@ function toMatchPayload(matchData) {
     score2,
     stage,
     group,
+    startedAt,
     scheduledAt,
     createdAt,
     updatedAt,
@@ -347,6 +349,7 @@ function toMatchPayload(matchData) {
     scoreDifference: Math.abs(parsedScore1 - parsedScore2),
     stage: stage || 'group',
     group: group || null,
+    startedAt: startedAt || null,
     scheduledAt: scheduledAt || now,
     createdAt: createdAt || now,
     updatedAt: updatedAt || now,
@@ -568,6 +571,7 @@ export function useTournamentData() {
         score2: updates.score2 ?? m.score2,
         stage: updates.stage || m.stage,
         group: updates.group || inferredGroup,
+        startedAt: updates.startedAt ?? m.startedAt,
         scheduledAt: updates.scheduledAt || m.scheduledAt,
         createdAt: m.createdAt,
         updatedAt: new Date().toISOString(),
@@ -575,7 +579,12 @@ export function useTournamentData() {
     });
 
     const updatedMatch = nextMatches.find((m) => m.id === matchId);
-    if (updatedMatch && updatedMatch.score1 === updatedMatch.score2) {
+    const hasScoreChange = Object.prototype.hasOwnProperty.call(updates, 'score1')
+      || Object.prototype.hasOwnProperty.call(updates, 'score2')
+      || Object.prototype.hasOwnProperty.call(updates, 'player1Name')
+      || Object.prototype.hasOwnProperty.call(updates, 'player2Name');
+
+    if (hasScoreChange && updatedMatch && updatedMatch.score1 === updatedMatch.score2) {
       throw new Error('Score cannot be tied.');
     }
 

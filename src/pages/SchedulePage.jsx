@@ -164,7 +164,12 @@ export default function SchedulePage() {
           <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl" />
           <div className="relative z-10">
-            <MatchGroup title={content.schedule.groups.a} matches={groupAMatches} group="A" delayStart={0.15} />
+            <MatchGroup
+              title={content.schedule.groups.a}
+              matches={groupAMatches}
+              group="A"
+              delayStart={0.15}
+            />
           </div>
         </div>
 
@@ -173,7 +178,12 @@ export default function SchedulePage() {
           <div className="absolute top-0 right-0 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl" />
           <div className="relative z-10">
-            <MatchGroup title={content.schedule.groups.b} matches={groupBMatches} group="B" delayStart={0.25} />
+            <MatchGroup
+              title={content.schedule.groups.b}
+              matches={groupBMatches}
+              group="B"
+              delayStart={0.25}
+            />
           </div>
         </div>
       </div>
