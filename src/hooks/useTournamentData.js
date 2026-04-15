@@ -713,7 +713,7 @@ export function useTournamentData() {
         const totalScoreDifference = Number(p.stats?.totalScoreDifference || 0);
         const points = wins * settings.pointsPerWin;
         const factor = 10 ** settings.nkrPrecision;
-        const nkrRaw = matchesPlayed > 0 ? totalScoreDifference / matchesPlayed : 0;
+        const nkrRaw = totalScoreDifference / 10;
         const nkr = Math.round(nkrRaw * factor) / factor;
 
         return {

@@ -48,7 +48,7 @@ export default function LeaderboardTable({ players }) {
 
   return (
     <div className="ui-card overflow-hidden p-0">
-      <div className="hidden md:grid md:grid-cols-9 gap-4 px-5 py-4 bg-white/5 border-b border-white/10">
+      <div className="hidden md:grid md:grid-cols-8 gap-4 px-5 py-4 bg-white/5 border-b border-white/10">
         <div className="text-left text-gray-400 font-semibold text-sm">Rank</div>
         <button onClick={() => handleSort('name')} className="text-left col-span-2 text-gray-400 font-semibold text-sm hover:text-white transition-colors">
           Player<SortIcon column="name" />
@@ -68,9 +68,6 @@ export default function LeaderboardTable({ players }) {
         <button onClick={() => handleSort('nkr')} className="text-right text-blue-400 font-semibold text-sm hover:text-white transition-colors">
           NKR<SortIcon column="nkr" />
         </button>
-        <button onClick={() => handleSort('totalScoreDifference')} className="text-right text-purple-400 font-semibold text-sm hover:text-white transition-colors">
-          Diff<SortIcon column="totalScoreDifference" />
-        </button>
       </div>
 
       <div className="divide-y divide-white/5">
@@ -84,7 +81,7 @@ export default function LeaderboardTable({ players }) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
-                className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-9 gap-3 px-5 py-4 hover:bg-white/10 transition-all duration-300 ${
+                className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-8 gap-3 px-5 py-4 hover:bg-white/10 transition-all duration-300 ${
                   rank <= 3 ? 'bg-gradient-to-r from-white/5 to-transparent' : ''
                 }`}
               >
@@ -109,7 +106,6 @@ export default function LeaderboardTable({ players }) {
                 <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">Losses: </span><span className="text-red-400 font-medium">{player.losses}</span></div>
                 <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">Points: </span><span className="text-cyan-300 font-semibold">{player.points}</span></div>
                 <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">NKR: </span><span className="text-blue-400 font-semibold">{player.nkr}</span></div>
-                <div className="text-right"><span className="md:hidden text-gray-400 text-sm">Diff: </span><span className="text-purple-300 font-semibold">{player.totalScoreDifference}</span></div>
               </motion.div>
             );
           })}

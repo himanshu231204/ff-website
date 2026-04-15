@@ -120,7 +120,7 @@ export default function LeaderboardPage() {
         </div>
         <div className="ui-grid ui-grid-3">
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-green-400">Win:</span> <span className="text-gray-300">+2 Points</span></div>
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-blue-400">NKR:</span> <span className="text-gray-300">Score Difference / Matches</span></div>
+          <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-blue-400">NKR:</span> <span className="text-gray-300">Score Difference / 10</span></div>
           <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm"><span className="font-bold text-yellow-400">Rank:</span> <span className="text-gray-300">Points DESC, then NKR DESC</span></div>
         </div>
       </section>
