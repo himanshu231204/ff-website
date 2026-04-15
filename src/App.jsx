@@ -55,6 +55,18 @@ function AppLayout() {
               <span className="gradient-text font-semibold">{content.footer.text}</span>
               <span className="text-gray-600"> © {content.footer.year}</span>
             </p>
+            <p className="mt-2 text-sm text-gray-400">
+              Built and maintained by Himanshu Kumar
+              {' '}
+              <a
+                href="https://github.com/himanshu231204/ff-website"
+                target="_blank"
+                rel="noreferrer"
+                className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4"
+              >
+                GitHub
+              </a>
+            </p>
           </div>
         </footer>
       )}
