@@ -103,7 +103,7 @@ export const knockoutMatchesInput = {
 
 export const matchResultsInput = {
   groupA: [
-    { id: 1, winner: null, kills: { Priyanshu: 2, Sunny: 7 } },
+    { id: 1, winner: 'Priyanshu', kills: { Priyanshu: 2, Sunny: 8 } },
     { id: 2, winner: null, kills: { Rajdeepak: 0, Suman: 0 } },
     { id: 3, winner: null, kills: { Himanshu: 0, Priyanshu: 0 } },
     { id: 4, winner: null, kills: { Sunny: 0, Rajdeepak: 0 } },
