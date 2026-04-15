@@ -1,25 +1,34 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { User, Zap } from 'lucide-react';
 
 export default function PlayerCard({ player, index }) {
+  const navigate = useNavigate();
+
   return (
-    <Link to={`/players/${player.id}`} className="group relative block h-full no-underline">
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ 
-          duration: 0.5, 
-          delay: index * 0.08,
-          ease: "easeOut"
-        }}
-        whileHover={{ 
-          scale: 1.03,
-          y: -8,
-          transition: { type: "spring", stiffness: 300, damping: 20 }
-        }}
-        className="relative h-full"
-      >
+    <motion.div
+      role="button"
+      tabIndex={0}
+      onClick={() => navigate(`/players/${player.id}`)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          navigate(`/players/${player.id}`);
+        }
+      }}
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ 
+        duration: 0.5, 
+        delay: index * 0.08,
+        ease: "easeOut"
+      }}
+      whileHover={{ 
+        scale: 1.03,
+        y: -8,
+        transition: { type: "spring", stiffness: 300, damping: 20 }
+      }}
+      className="group relative block h-full cursor-pointer outline-none no-underline"
+    >
         {/* Gradient Border Glow */}
         <div className="absolute -inset-0.5 bg-gradient-to-r from-[#00F2FF] via-[#7000FF] to-[#00F2FF] rounded-2xl opacity-0 group-hover:opacity-100 blur-md transition duration-500" />
         
@@ -72,6 +81,5 @@ export default function PlayerCard({ player, index }) {
           <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 w-2 h-2 border-b-2 border-l-2 border-[#7000FF]/0 group-hover:border-[#7000FF]/50 transition-all duration-300" />
         </div>
       </motion.div>
-    </Link>
   );
 }
