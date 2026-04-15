@@ -7,18 +7,6 @@ function getTopPlayers(leaderboardData) {
   return [...leaderboardData].slice(0, 4);
 }
 
-function QualificationBadge({ rank, ready }) {
-  if (!ready) {
-    return <span className="rounded-full border border-yellow-500/30 bg-yellow-500/15 px-2 py-0.5 text-xs text-yellow-300">Pending</span>;
-  }
-
-  if (rank <= 4) {
-    return <span className="rounded-full border border-green-500/30 bg-green-500/15 px-2 py-0.5 text-xs text-green-400">Qualified</span>;
-  }
-
-  return <span className="rounded-full border border-red-500/30 bg-red-500/15 px-2 py-0.5 text-xs text-red-400">Not Qualified</span>;
-}
-
 function MatchCard({ match, stage }) {
   const isCompleted = match.winner !== null;
   
@@ -140,7 +128,6 @@ export default function KnockoutPage() {
                 </div>
                 <span className="font-semibold text-white">{player.name}</span>
                 <span className="ml-auto text-gray-400 text-sm">Points: {player.points} | NKR: {player.nkr}</span>
-                <QualificationBadge rank={idx + 1} ready={groupStageComplete} />
               </motion.div>
             ))}
           </div>
@@ -169,7 +156,6 @@ export default function KnockoutPage() {
                 </div>
                 <span className="font-semibold text-white">{player.name}</span>
                 <span className="ml-auto text-gray-400 text-sm">Points: {player.points} | NKR: {player.nkr}</span>
-                <QualificationBadge rank={idx + 1} ready={groupStageComplete} />
               </motion.div>
             ))}
           </div>
