@@ -1,28 +1,30 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { User, Zap } from 'lucide-react';
 
 export default function PlayerCard({ player, index }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ 
-        duration: 0.5, 
-        delay: index * 0.08,
-        ease: "easeOut"
-      }}
-      whileHover={{ 
-        scale: 1.03,
-        y: -8,
-        transition: { type: "spring", stiffness: 300, damping: 20 }
-      }}
-      className="group relative h-full"
-    >
-      {/* Gradient Border Glow */}
-      <div className="absolute -inset-0.5 bg-gradient-to-r from-[#00F2FF] via-[#7000FF] to-[#00F2FF] rounded-2xl opacity-0 group-hover:opacity-100 blur-md transition duration-500" />
-      
-      {/* Card Content */}
-      <div className="ui-card relative overflow-hidden p-5 sm:p-6 hover:bg-white/[0.08]">
+    <Link to={`/players/${player.id}`} className="group relative block h-full no-underline">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ 
+          duration: 0.5, 
+          delay: index * 0.08,
+          ease: "easeOut"
+        }}
+        whileHover={{ 
+          scale: 1.03,
+          y: -8,
+          transition: { type: "spring", stiffness: 300, damping: 20 }
+        }}
+        className="relative h-full"
+      >
+        {/* Gradient Border Glow */}
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-[#00F2FF] via-[#7000FF] to-[#00F2FF] rounded-2xl opacity-0 group-hover:opacity-100 blur-md transition duration-500" />
+        
+        {/* Card Content */}
+        <div className="ui-card relative overflow-hidden p-5 sm:p-6 hover:bg-white/[0.08]">
         {/* Avatar Container */}
         <div className="relative mb-4 sm:mb-5">
           {/* Avatar Glow Ring */}
@@ -66,9 +68,10 @@ export default function PlayerCard({ player, index }) {
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00F2FF]/5 to-[#7000FF]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         
         {/* Corner Accents */}
-        <div className="absolute top-2 sm:top-3 right-2 sm:right-3 w-2 h-2 border-t-2 border-r-2 border-[#00F2FF]/0 group-hover:border-[#00F2FF]/50 transition-all duration-300" />
-        <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 w-2 h-2 border-b-2 border-l-2 border-[#7000FF]/0 group-hover:border-[#7000FF]/50 transition-all duration-300" />
-      </div>
-    </motion.div>
+          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 w-2 h-2 border-t-2 border-r-2 border-[#00F2FF]/0 group-hover:border-[#00F2FF]/50 transition-all duration-300" />
+          <div className="absolute bottom-2 sm:bottom-3 left-2 sm:left-3 w-2 h-2 border-b-2 border-l-2 border-[#7000FF]/0 group-hover:border-[#7000FF]/50 transition-all duration-300" />
+        </div>
+      </motion.div>
+    </Link>
   );
 }

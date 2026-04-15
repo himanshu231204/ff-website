@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import PlayersPage from './pages/PlayersPage';
+import PlayerProfilePage from './pages/PlayerProfilePage';
 import SchedulePage from './pages/SchedulePage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import KnockoutPage from './pages/KnockoutPage';
@@ -27,6 +28,7 @@ function AppLayout() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/players" element={<PlayersPage />} />
+            <Route path="/players/:playerId" element={<PlayerProfilePage />} />
             <Route path="/schedule" element={<SchedulePage />} />
             <Route path="/leaderboard" element={<LeaderboardPage />} />
             <Route path="/knockout" element={<KnockoutPage />} />
