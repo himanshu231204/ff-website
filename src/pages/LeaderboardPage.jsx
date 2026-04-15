@@ -40,8 +40,14 @@ function PodiumCard({ player, position }) {
         <div><p className="text-gray-500">W</p><p className="font-semibold text-green-400">{player.wins}</p></div>
         <div><p className="text-gray-500">L</p><p className="font-semibold text-red-400">{player.losses}</p></div>
       </div>
-      <div className={`mt-4 h-20 rounded-t-3xl bg-gradient-to-b ${config.gradient} ${config.glow} flex items-center justify-center`}>
-        <span className="text-2xl font-black text-white/20">#{position}</span>
+      <div className={`relative mt-4 h-20 overflow-hidden rounded-t-3xl bg-gradient-to-b ${config.gradient} ${config.glow} flex items-center justify-center`}>
+        <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px]" />
+        <span
+          className="relative text-2xl font-black text-white/85"
+          style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.45)' }}
+        >
+          #{position}
+        </span>
       </div>
     </motion.div>
   );
