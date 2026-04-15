@@ -1,4 +1,5 @@
 import { calculateLeaderboard } from './players';
+import { matchResultsInput, scheduleStatusInput } from './tournamentInput';
 
 // ============================================
 // TOURNAMENT AUTOMATION SYSTEM
@@ -13,7 +14,7 @@ import { calculateLeaderboard } from './players';
 // --------------------------------------------
 // GROUP STAGE MATCHES
 // --------------------------------------------
-export const groupAMatches = [
+const groupABaseMatches = [
   { id: 1, round: 1, player1: 'Priyanshu', player2: 'Sunny', winner: null, stage: 'group', group: 'A', kills: {} },
   { id: 2, round: 1, player1: 'Rajdeepak', player2: 'Suman', winner: null, stage: 'group', group: 'A', kills: {} },
   { id: 3, round: 2, player1: 'Himanshu', player2: 'Priyanshu', winner: null, stage: 'group', group: 'A', kills: {} },
@@ -26,7 +27,7 @@ export const groupAMatches = [
   { id: 10, round: 5, player1: 'Sunny', player2: 'Himanshu', winner: null, stage: 'group', group: 'A', kills: {} },
 ];
 
-export const groupBMatches = [
+const groupBBaseMatches = [
   { id: 11, round: 1, player1: 'Devratan', player2: 'Shubham', winner: null, stage: 'group', group: 'B', kills: {} },
   { id: 12, round: 1, player1: 'Dev', player2: 'Rajnish', winner: null, stage: 'group', group: 'B', kills: {} },
   { id: 13, round: 2, player1: 'Chandan', player2: 'Devratan', winner: null, stage: 'group', group: 'B', kills: {} },
@@ -38,6 +39,27 @@ export const groupBMatches = [
   { id: 19, round: 5, player1: 'Devratan', player2: 'Rajnish', winner: null, stage: 'group', group: 'B', kills: {} },
   { id: 20, round: 5, player1: 'Shubham', player2: 'Chandan', winner: null, stage: 'group', group: 'B', kills: {} },
 ];
+
+const applyResultsToGroupMatches = (baseMatches, groupInputRows) => {
+  return baseMatches.map((match, index) => {
+    const localGroupId = index + 1;
+    const input = (groupInputRows || []).find((row) => Number(row.id) === localGroupId);
+    if (!input) return match;
+
+    const winner = input.winner === match.player1 || input.winner === match.player2
+      ? input.winner
+      : null;
+
+    return {
+      ...match,
+      winner,
+      kills: input.kills || {},
+    };
+  });
+};
+
+export const groupAMatches = applyResultsToGroupMatches(groupABaseMatches, matchResultsInput.groupA);
+export const groupBMatches = applyResultsToGroupMatches(groupBBaseMatches, matchResultsInput.groupB);
 
 // --------------------------------------------
 // KNOCKOUT STAGE MATCHES - Auto-generated
@@ -61,36 +83,10 @@ export const knockoutMatches = {
 // SCHEDULE UI OPTIONS (Developer Friendly)
 // --------------------------------------------
 export const scheduleUiOptions = {
-  // JSON-style config for developers: manage Group A and Group B matches here.
-  // Set allowStart manually:
-  // null -> not set yet (treated as Pending)
-  // false -> Pending
-  // true -> Match Played
+  // Manage in src/data/tournamentInput.js only.
   matchControls: {
-    groupA: [
-      { id: 1, allowStart: null },
-      { id: 2, allowStart: null },
-      { id: 3, allowStart: null },
-      { id: 4, allowStart: null },
-      { id: 5, allowStart: null },
-      { id: 6, allowStart: null },
-      { id: 7, allowStart: null },
-      { id: 8, allowStart: null },
-      { id: 9, allowStart: null },
-      { id: 10, allowStart: null },
-    ],
-    groupB: [
-      { id: 1, allowStart: null },
-      { id: 2, allowStart: null },
-      { id: 3, allowStart: true },
-      { id: 4, allowStart: null },
-      { id: 5, allowStart: null },
-      { id: 6, allowStart: null },
-      { id: 7, allowStart: null },
-      { id: 8, allowStart: null },
-      { id: 9, allowStart: null },
-      { id: 10, allowStart: null },
-    ],
+    groupA: scheduleStatusInput.groupA,
+    groupB: scheduleStatusInput.groupB,
   },
   statusLabels: {
     pending: 'Pending',

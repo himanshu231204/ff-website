@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
+import { getAllMatches as getStaticMatches } from '../data/matches';
 
 const STORAGE_KEYS = {
   PLAYERS: 'tournament_players',
@@ -131,6 +132,23 @@ const DEFAULT_STATS = {
   totalScoreDifference: 0,
 };
 
+const MATCHES_SOURCE = 'matches-js';
+
+const DEFAULT_MATCHES = getStaticMatches().map((match) => {
+  const p1Kills = Number(match.kills?.[match.player1] ?? 0);
+  const p2Kills = Number(match.kills?.[match.player2] ?? 0);
+  const winner = match.winner;
+
+  const score1 = p1Kills || (winner === match.player1 ? 1 : 0);
+  const score2 = p2Kills || (winner === match.player2 ? 1 : 0);
+
+  return {
+    ...match,
+    score1,
+    score2,
+  };
+});
+
 function safeParse(raw, fallback) {
   try {
     return raw ? JSON.parse(raw) : fallback;
@@ -174,9 +192,14 @@ function isMatchCompleted(match) {
   const score1 = Number(match.score1 ?? 0);
   const score2 = Number(match.score2 ?? 0);
   const winner = match.winner;
+  const hasDeclaredWinner = winner === match.player1 || winner === match.player2;
 
-  if (!winner || score1 === score2) return false;
-  return winner === match.player1 || winner === match.player2;
+  if (!hasDeclaredWinner) return false;
+
+  // If winner is manually set in matches.js, treat it as completed even when scores are equal.
+  if (score1 === score2) return true;
+
+  return true;
 }
 
 function toPairKey(player1, player2) {
@@ -380,7 +403,9 @@ export function useTournamentData() {
 
   const hydrateFromStorage = useCallback(() => {
     const rawPlayers = safeParse(localStorage.getItem(STORAGE_KEYS.PLAYERS), DEFAULT_PLAYERS);
-    const rawMatches = safeParse(localStorage.getItem(STORAGE_KEYS.MATCHES), []);
+    const rawMatches = MATCHES_SOURCE === 'matches-js'
+      ? DEFAULT_MATCHES
+      : safeParse(localStorage.getItem(STORAGE_KEYS.MATCHES), []);
     const savedPlayers = rawPlayers.map(normalizePlayer);
     const savedMatches = rawMatches.map(normalizeMatch);
     const savedWeapons = safeParse(localStorage.getItem(STORAGE_KEYS.WEAPONS), DEFAULT_WEAPONS);
