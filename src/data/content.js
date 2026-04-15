@@ -3,7 +3,7 @@ const content = {
     siteName: 'Free Fire Clash Squad Tournament',
     description: 'Premium esports tournament dashboard with real-time leaderboards',
     keywords: 'free fire, esports, tournament, clash squad, gaming',
-    author: 'Tournament Admin',
+    author: 'Himanshu kumar',
     year: '2026',
   },
 
