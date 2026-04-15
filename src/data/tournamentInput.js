@@ -10,12 +10,11 @@ export const playersInput = [
   { id: 3, name: 'Rajdeepak', level: 66, group: 'A', matches: 4, wins: 2, kills: 10 },
   { id: 4, name: 'Suman', level: 62, group: 'A', matches: 4, wins: 1, kills: 8 },
   { id: 5, name: 'Himanshu', level: 57, group: 'A', matches: 4, wins: 4, kills: 30 },
-  { id: 6, name: 'GOLU', level: 62, group: 'A', matches: 4, wins: 4, kills: 30 },
-  { id: 7, name: 'Devratan', level: 72, group: 'B', matches: 4, wins: 3, kills: 15 },
-  { id: 8, name: 'Shubham', level: 69, group: 'B', matches: 4, wins: 3, kills: 13 },
-  { id: 9, name: 'Dev', level: 64, group: 'B', matches: 4, wins: 2, kills: 11 },
-  { id: 10, name: 'Rajnish', level: 61, group: 'B', matches: 4, wins: 1, kills: 9 },
-  { id: 11, name: 'Chandan', level: 49, group: 'B', matches: 4, wins: 1, kills: 7 },
+  { id: 6, name: 'Devratan', level: 72, group: 'B', matches: 4, wins: 3, kills: 15 },
+  { id: 7, name: 'Shubham', level: 69, group: 'B', matches: 4, wins: 3, kills: 13 },
+  { id: 8, name: 'Dev', level: 64, group: 'B', matches: 4, wins: 2, kills: 11 },
+  { id: 9, name: 'Rajnish', level: 61, group: 'B', matches: 4, wins: 1, kills: 9 },
+  { id: 10, name: 'Chandan', level: 49, group: 'B', matches: 4, wins: 1, kills: 7 },
 ];
 
 export const weaponsInput = [
