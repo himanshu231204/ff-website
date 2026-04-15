@@ -104,14 +104,14 @@ export const knockoutMatchesInput = {
 export const matchResultsInput = {
   groupA: [
     { id: 1, winner: 'Sunny', kills: { Priyanshu: 2, Sunny: 8 } },
-    { id: 2, winner: null, kills: { Rajdeepak: 0, Suman: 0 } },
+    { id: 2, winner: 'Rajdeepak', kills: { Rajdeepak: 8, Suman: 0 } },
     { id: 3, winner: null, kills: { Himanshu: 0, Priyanshu: 0 } },
     { id: 4, winner: null, kills: { Sunny: 0, Rajdeepak: 0 } },
-    { id: 5, winner: null, kills: { Suman: 0, Himanshu: 0 } },
+    { id: 5, winner: 'Himanshu', kills: { Suman: 0, Himanshu: 8 } },
     { id: 6, winner: null, kills: { Priyanshu: 0, Rajdeepak: 0 } },
-    { id: 7, winner: null, kills: { Sunny: 0, Suman: 0 } },
+    { id: 7, winner: 'Sunny', kills: { Sunny: 8, Suman: 0 } },
     { id: 8, winner: null, kills: { Himanshu: 0, Rajdeepak: 0 } },
-    { id: 9, winner: null, kills: { Priyanshu: 0, Suman: 0 } },
+    { id: 9, winner: 'Priyanshu', kills: { Priyanshu: 8, Suman: 0 } },
     { id: 10, winner: null, kills: { Sunny: 0, Himanshu: 0 } },
   ],
   groupB: [
@@ -134,14 +134,14 @@ export const matchResultsInput = {
 export const scheduleStatusInput = {
   groupA: [
     { id: 1, allowStart: true },
-    { id: 2, allowStart: null },
+    { id: 2, allowStart: true },
     { id: 3, allowStart: null },
     { id: 4, allowStart: null },
-    { id: 5, allowStart: null },
+    { id: 5, allowStart: true },
     { id: 6, allowStart: null },
-    { id: 7, allowStart: null },
+    { id: 7, allowStart: true},
     { id: 8, allowStart: null },
-    { id: 9, allowStart: null },
+    { id: 9, allowStart: true },
     { id: 10, allowStart: null },
   ],
   groupB: [
