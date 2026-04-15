@@ -80,16 +80,16 @@ export const scheduleUiOptions = {
       { id: 10, allowStart: null },
     ],
     groupB: [
-      { id: 11, allowStart: null },
-      { id: 12, allowStart: null },
-      { id: 13, allowStart: true },
-      { id: 14, allowStart: null },
-      { id: 15, allowStart: null },
-      { id: 16, allowStart: null },
-      { id: 17, allowStart: null },
-      { id: 18, allowStart: null },
-      { id: 19, allowStart: null },
-      { id: 20, allowStart: null },
+      { id: 1, allowStart: null },
+      { id: 2, allowStart: null },
+      { id: 3, allowStart: true },
+      { id: 4, allowStart: null },
+      { id: 5, allowStart: null },
+      { id: 6, allowStart: null },
+      { id: 7, allowStart: null },
+      { id: 8, allowStart: null },
+      { id: 9, allowStart: null },
+      { id: 10, allowStart: null },
     ],
   },
   statusLabels: {
@@ -99,12 +99,33 @@ export const scheduleUiOptions = {
 };
 
 const getMatchControl = (match, matchIndex = 0) => {
-  const directId = Number(match?.id);
-  const fallbackMatchNumber = matchIndex + 1;
-  const matchNumber = Number.isFinite(directId) ? directId : fallbackMatchNumber;
+  const localMatchNumber = matchIndex + 1;
+  const scheduleControlId = Number(match?.scheduleControlId);
+  const directMatchId = Number(match?.id);
   const groupKey = match?.group === 'B' ? 'groupB' : 'groupA';
   const groupConfig = scheduleUiOptions.matchControls[groupKey] || [];
-  return groupConfig.find((item) => Number(item.id) === matchNumber) || null;
+
+  // 1) Preferred: explicit control id passed from Schedule UI integration.
+  if (Number.isFinite(scheduleControlId)) {
+    const byScheduleControlId = groupConfig.find((item) => Number(item.id) === scheduleControlId);
+    if (byScheduleControlId) return byScheduleControlId;
+  }
+
+  // 2) If actual numeric match id exists, try that directly.
+  if (Number.isFinite(directMatchId)) {
+    const byDirectMatchId = groupConfig.find((item) => Number(item.id) === directMatchId);
+    if (byDirectMatchId) return byDirectMatchId;
+
+    // Group B supports absolute ids 11..20 by mapping to local 1..10.
+    if (groupKey === 'groupB' && directMatchId >= 11 && directMatchId <= 20) {
+      const groupBLocalId = directMatchId - 10;
+      const byGroupBLocalId = groupConfig.find((item) => Number(item.id) === groupBLocalId);
+      if (byGroupBLocalId) return byGroupBLocalId;
+    }
+  }
+
+  // 3) Final fallback by rendered order index (local in-group position).
+  return groupConfig.find((item) => Number(item.id) === localMatchNumber) || null;
 };
 
 export const getScheduleDisplayStatus = (match, matchIndex = 0) => {

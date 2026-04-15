@@ -4,6 +4,11 @@ import { Calendar, Users, Trophy, Swords, Zap, Target, Flame } from 'lucide-reac
 import { useTournamentData } from '../hooks/useTournamentData';
 import MatchCard from '../components/MatchCard';
 import content from '../data/content';
+import { groupAMatches as scheduleGroupAConfig, groupBMatches as scheduleGroupBConfig } from '../data/matches';
+
+const toPairKey = (player1, player2) => {
+  return [player1, player2].filter(Boolean).sort((a, b) => a.localeCompare(b)).join('::');
+};
 
 function MatchGroup({ title, matches, group, delayStart = 0 }) {
   const isGroupA = group === 'A';
@@ -60,7 +65,10 @@ function MatchGroup({ title, matches, group, delayStart = 0 }) {
             </div>
             
             {/* Match Card */}
-            <MatchCard match={match} index={idx} />
+            <MatchCard
+              match={match}
+              index={match.scheduleControlId ? match.scheduleControlId - 1 : idx}
+            />
           </motion.div>
         ))}
       </div>
@@ -72,16 +80,33 @@ export default function SchedulePage() {
   const { matches, players } = useTournamentData();
 
   const playerGroupMap = useMemo(() => new Map(players.map((p) => [p.name, p.group])), [players]);
+  const groupAControlMap = useMemo(
+    () => new Map(scheduleGroupAConfig.map((match, idx) => [toPairKey(match.player1, match.player2), idx + 1])),
+    [],
+  );
+  const groupBControlMap = useMemo(
+    () => new Map(scheduleGroupBConfig.map((match, idx) => [toPairKey(match.player1, match.player2), idx + 1])),
+    [],
+  );
 
   const groupMatches = useMemo(() => {
     return matches
       .filter((match) => (match.stage || 'group') === 'group')
-      .map((match) => ({
-        ...match,
-        group: match.group || playerGroupMap.get(match.player1) || playerGroupMap.get(match.player2) || 'A',
-      }))
+      .map((match) => {
+        const group = match.group || playerGroupMap.get(match.player1) || playerGroupMap.get(match.player2) || 'A';
+        const pairKey = toPairKey(match.player1, match.player2);
+        const scheduleControlId = group === 'B'
+          ? (groupBControlMap.get(pairKey) || null)
+          : (groupAControlMap.get(pairKey) || null);
+
+        return {
+          ...match,
+          group,
+          scheduleControlId,
+        };
+      })
       .sort((a, b) => new Date(a.scheduledAt || a.createdAt) - new Date(b.scheduledAt || b.createdAt));
-  }, [matches, playerGroupMap]);
+  }, [matches, playerGroupMap, groupAControlMap, groupBControlMap]);
 
   const groupAMatches = useMemo(
     () => groupMatches.filter((match) => match.group === 'A'),
