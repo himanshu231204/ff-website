@@ -20,7 +20,7 @@ export const matchResultsInput = {
   groupB: [
     { id: 1, winner: null, kills: { Devratan: 0, Shubham: 0 } },
     { id: 2, winner: null, kills: { Dev: 0, Rajnish: 0 } },
-    { id: 3, winner: "Chandan", kills: { Chandan: 7, Devratan: 8 } },
+    { id: 3, winner: 'Chandan', kills: { Chandan: 7, Devratan: 8 } },
     { id: 4, winner: null, kills: { Shubham: 0, Dev: 0 } },
     { id: 5, winner: null, kills: { Rajnish: 0, Chandan: 0 } },
     { id: 6, winner: null, kills: { Devratan: 0, Dev: 0 } },

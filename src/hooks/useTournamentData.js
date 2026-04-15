@@ -182,10 +182,9 @@ function normalizePlayer(player) {
   };
 }
 
-function resolveWinnerFromScores(player1, player2, score1, score2, winnerFallback) {
-  if (Number(score1) > Number(score2)) return player1;
-  if (Number(score2) > Number(score1)) return player2;
-  return winnerFallback || null;
+function resolveWinnerFromInput(player1, player2, winnerValue) {
+  if (winnerValue === player1 || winnerValue === player2) return winnerValue;
+  return null;
 }
 
 function isMatchCompleted(match) {
@@ -281,7 +280,7 @@ function ensureGroupStageSchedule(playerList, matchList) {
 function normalizeMatch(match) {
   const score1 = Number(match.score1 ?? match.kills?.[match.player1] ?? 0);
   const score2 = Number(match.score2 ?? match.kills?.[match.player2] ?? 0);
-  const winner = resolveWinnerFromScores(match.player1, match.player2, score1, score2, match.winner);
+  const winner = resolveWinnerFromInput(match.player1, match.player2, match.winner);
   const now = new Date().toISOString();
 
   return {
@@ -321,7 +320,7 @@ function computePlayersFromMatches(basePlayers, matches) {
     const score1 = Number(match.score1 || 0);
     const score2 = Number(match.score2 || 0);
     const diff = Math.abs(score1 - score2);
-    const winner = resolveWinnerFromScores(match.player1, match.player2, score1, score2, match.winner);
+    const winner = resolveWinnerFromInput(match.player1, match.player2, match.winner);
 
     p1.stats.matchesPlayed += 1;
     p2.stats.matchesPlayed += 1;
@@ -347,6 +346,7 @@ function toMatchPayload(matchData) {
     id = Date.now(),
     player1Name,
     player2Name,
+    winner,
     score1,
     score2,
     stage,
@@ -359,7 +359,7 @@ function toMatchPayload(matchData) {
 
   const parsedScore1 = Number(score1) || 0;
   const parsedScore2 = Number(score2) || 0;
-  const resolvedWinner = resolveWinnerFromScores(player1Name, player2Name, parsedScore1, parsedScore2);
+  const resolvedWinner = resolveWinnerFromInput(player1Name, player2Name, winner);
   const now = new Date().toISOString();
 
   return {
