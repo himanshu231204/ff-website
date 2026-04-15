@@ -1,5 +1,11 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { getAllMatches as getStaticMatches } from '../data/matches';
+import {
+  playersInput,
+  weaponsInput,
+  bannedCharactersInput,
+  settingsInput,
+} from '../data/tournamentInput';
 
 const STORAGE_KEYS = {
   PLAYERS: 'tournament_players',
@@ -11,119 +17,10 @@ const STORAGE_KEYS = {
 
 const STORAGE_SYNC_EVENT = 'tournament_data_sync';
 
-const DEFAULT_PLAYERS = [
-  {
-    id: 1,
-    name: 'Priyanshu',
-    level: 75,
-    group: 'A',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 2,
-    name: 'Sunny',
-    level: 70,
-    group: 'A',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 3,
-    name: 'Rajdeepak',
-    level: 66,
-    group: 'A',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 4,
-    name: 'Suman',
-    level: 62,
-    group: 'A',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 5,
-    name: 'Himanshu',
-    level: 57,
-    group: 'A',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 6,
-    name: 'Devratan',
-    level: 72,
-    group: 'B',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 7,
-    name: 'Shubham',
-    level: 69,
-    group: 'B',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 8,
-    name: 'Dev',
-    level: 64,
-    group: 'B',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 9,
-    name: 'Rajnish',
-    level: 61,
-    group: 'B',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-  {
-    id: 10,
-    name: 'Chandan',
-    level: 49,
-    group: 'B',
-    stats: { matchesPlayed: 0, wins: 0, losses: 0, totalScoreDifference: 0 },
-  },
-];
-
-const DEFAULT_WEAPONS = [
-  { id: 'w1', name: 'AWM-Y' },
-  { id: 'w2', name: 'Kar98K' },
-  { id: 'w3', name: 'Woodpecker' },
-  { id: 'w4', name: 'AC80' },
-  { id: 'w5', name: 'Groza (Normal)' },
-  { id: 'w6', name: 'SVD' },
-  { id: 'w7', name: 'XM8' },
-  { id: 'w8', name: 'MP40' },
-  { id: 'w9', name: 'Thompson (Normal)' },
-  { id: 'w10', name: 'Bizon' },
-  { id: 'w11', name: 'UMP' },
-  { id: 'w12', name: 'MP5' },
-  { id: 'w13', name: 'M1887' },
-  { id: 'w14', name: 'Desert Eagle' },
-];
-
-const DEFAULT_BANNED_CHARACTERS = {
-  active: [
-    { id: 'a1', name: 'Ray' },
-    { id: 'a2', name: 'Nero' },
-    { id: 'a3', name: 'Morse' },
-    { id: 'a4', name: 'Oscar' },
-    { id: 'a5', name: 'Kassie' },
-    { id: 'a6', name: 'Ryden' },
-    { id: 'a7', name: 'Ignis' },
-    { id: 'a8', name: 'Iris' },
-    { id: 'a9', name: 'Dimitri' },
-    { id: 'a10', name: 'Skyler' },
-    { id: 'a11', name: 'A124' },
-  ],
-  passive: [{ id: 'p1', name: 'Sonia' }],
-};
-
-const DEFAULT_SETTINGS = {
-  pointsPerWin: 2,
-  nkrPrecision: 2,
-  totalMatches: 20,
-  groupSize: 5,
-};
+const DEFAULT_PLAYERS = playersInput;
+const DEFAULT_WEAPONS = weaponsInput;
+const DEFAULT_BANNED_CHARACTERS = bannedCharactersInput;
+const DEFAULT_SETTINGS = settingsInput;
 
 const DEFAULT_STATS = {
   matchesPlayed: 0,
@@ -402,23 +299,11 @@ export function useTournamentData() {
   }, []);
 
   const hydrateFromStorage = useCallback(() => {
-    const rawPlayers = safeParse(localStorage.getItem(STORAGE_KEYS.PLAYERS), DEFAULT_PLAYERS);
-    const rawMatches = MATCHES_SOURCE === 'matches-js'
-      ? DEFAULT_MATCHES
-      : safeParse(localStorage.getItem(STORAGE_KEYS.MATCHES), []);
-    const savedPlayers = rawPlayers.map(normalizePlayer);
-    const savedMatches = rawMatches.map(normalizeMatch);
-    const savedWeapons = safeParse(localStorage.getItem(STORAGE_KEYS.WEAPONS), DEFAULT_WEAPONS);
-    const savedBanned = safeParse(
-      localStorage.getItem(STORAGE_KEYS.BANNED_CHARACTERS),
-      DEFAULT_BANNED_CHARACTERS,
-    );
-    const loadedSettings = safeParse(localStorage.getItem(STORAGE_KEYS.SETTINGS), DEFAULT_SETTINGS);
-    const savedSettings = {
-      ...loadedSettings,
-      // Migration support for old killRatePrecision key.
-      nkrPrecision: Number(loadedSettings.nkrPrecision ?? loadedSettings.killRatePrecision ?? DEFAULT_SETTINGS.nkrPrecision),
-    };
+    const savedPlayers = DEFAULT_PLAYERS.map(normalizePlayer);
+    const savedMatches = DEFAULT_MATCHES.map(normalizeMatch);
+    const savedWeapons = DEFAULT_WEAPONS;
+    const savedBanned = DEFAULT_BANNED_CHARACTERS;
+    const savedSettings = { ...DEFAULT_SETTINGS };
 
     const normalizedMatches = ensureGroupStageSchedule(savedPlayers, savedMatches);
     const normalizedPlayers = computePlayersFromMatches(savedPlayers, normalizedMatches);
@@ -429,15 +314,11 @@ export function useTournamentData() {
     setBannedCharacters(savedBanned);
     setSettings({ ...DEFAULT_SETTINGS, ...savedSettings });
 
-    const playersString = JSON.stringify(normalizedPlayers);
-    if (localStorage.getItem(STORAGE_KEYS.PLAYERS) !== playersString) {
-      localStorage.setItem(STORAGE_KEYS.PLAYERS, playersString);
-    }
-
-    const matchesString = JSON.stringify(normalizedMatches);
-    if (localStorage.getItem(STORAGE_KEYS.MATCHES) !== matchesString) {
-      localStorage.setItem(STORAGE_KEYS.MATCHES, matchesString);
-    }
+    localStorage.setItem(STORAGE_KEYS.PLAYERS, JSON.stringify(normalizedPlayers));
+    localStorage.setItem(STORAGE_KEYS.MATCHES, JSON.stringify(normalizedMatches));
+    localStorage.setItem(STORAGE_KEYS.WEAPONS, JSON.stringify(savedWeapons));
+    localStorage.setItem(STORAGE_KEYS.BANNED_CHARACTERS, JSON.stringify(savedBanned));
+    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(savedSettings));
   }, []);
 
   useEffect(() => {

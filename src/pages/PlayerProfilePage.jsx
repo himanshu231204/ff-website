@@ -69,6 +69,7 @@ export default function PlayerProfilePage() {
     const matchesPlayed = player.stats?.matchesPlayed || 0;
     const points = wins * 2;
     const rank = leaderboard.findIndex((item) => item.id === player.id) + 1;
+    const nkr = Number(((player.stats?.totalScoreDifference || 0) / 10).toFixed(2));
 
     return {
       playerMatches,
@@ -78,7 +79,7 @@ export default function PlayerProfilePage() {
       matchesPlayed,
       points,
       rank: rank > 0 ? rank : null,
-      nkr: player.stats?.totalScoreDifference || 0,
+      nkr,
     };
   }, [player, matches, leaderboard]);
 

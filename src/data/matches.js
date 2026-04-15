@@ -1,5 +1,11 @@
 import { calculateLeaderboard } from './players';
-import { matchResultsInput, scheduleStatusInput } from './tournamentInput';
+import {
+  matchResultsInput,
+  scheduleStatusInput,
+  groupAMatchesInput,
+  groupBMatchesInput,
+  knockoutMatchesInput,
+} from './tournamentInput';
 
 // ============================================
 // TOURNAMENT AUTOMATION SYSTEM
@@ -14,31 +20,9 @@ import { matchResultsInput, scheduleStatusInput } from './tournamentInput';
 // --------------------------------------------
 // GROUP STAGE MATCHES
 // --------------------------------------------
-const groupABaseMatches = [
-  { id: 1, round: 1, player1: 'Priyanshu', player2: 'Sunny', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 2, round: 1, player1: 'Rajdeepak', player2: 'Suman', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 3, round: 2, player1: 'Himanshu', player2: 'Priyanshu', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 4, round: 2, player1: 'Sunny', player2: 'Rajdeepak', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 5, round: 3, player1: 'Suman', player2: 'Himanshu', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 6, round: 3, player1: 'Priyanshu', player2: 'Rajdeepak', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 7, round: 4, player1: 'Sunny', player2: 'Suman', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 8, round: 4, player1: 'Himanshu', player2: 'Rajdeepak', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 9, round: 5, player1: 'Priyanshu', player2: 'Suman', winner: null, stage: 'group', group: 'A', kills: {} },
-  { id: 10, round: 5, player1: 'Sunny', player2: 'Himanshu', winner: null, stage: 'group', group: 'A', kills: {} },
-];
+const groupABaseMatches = groupAMatchesInput;
 
-const groupBBaseMatches = [
-  { id: 11, round: 1, player1: 'Devratan', player2: 'Shubham', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 12, round: 1, player1: 'Dev', player2: 'Rajnish', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 13, round: 2, player1: 'Chandan', player2: 'Devratan', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 14, round: 2, player1: 'Shubham', player2: 'Dev', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 15, round: 3, player1: 'Rajnish', player2: 'Chandan', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 16, round: 3, player1: 'Devratan', player2: 'Dev', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 17, round: 4, player1: 'Shubham', player2: 'Rajnish', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 18, round: 4, player1: 'Chandan', player2: 'Dev', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 19, round: 5, player1: 'Devratan', player2: 'Rajnish', winner: null, stage: 'group', group: 'B', kills: {} },
-  { id: 20, round: 5, player1: 'Shubham', player2: 'Chandan', winner: null, stage: 'group', group: 'B', kills: {} },
-];
+const groupBBaseMatches = groupBMatchesInput;
 
 const applyResultsToGroupMatches = (baseMatches, groupInputRows) => {
   return baseMatches.map((match, index) => {
@@ -64,20 +48,7 @@ export const groupBMatches = applyResultsToGroupMatches(groupBBaseMatches, match
 // --------------------------------------------
 // KNOCKOUT STAGE MATCHES - Auto-generated
 // --------------------------------------------
-export const knockoutMatches = {
-  semiFinals: [
-    { id: 'SF1', player1: null, player2: null, winner: null, stage: 'semi', kills: {} },
-    { id: 'SF2', player1: null, player2: null, winner: null, stage: 'semi', kills: {} },
-  ],
-  final: {
-    id: 'GF1',
-    player1: null,
-    player2: null,
-    winner: null,
-    stage: 'final',
-    kills: {}
-  },
-};
+export const knockoutMatches = knockoutMatchesInput;
 
 // --------------------------------------------
 // SCHEDULE UI OPTIONS (Developer Friendly)

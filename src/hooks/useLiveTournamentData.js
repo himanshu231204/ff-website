@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { players as staticPlayers } from '../data/players';
+import { playersInput as staticPlayers } from '../data/tournamentInput';
 
 export function useLivePlayers() {
   const [players] = useState(staticPlayers);

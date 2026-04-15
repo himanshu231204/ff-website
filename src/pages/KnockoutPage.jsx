@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Swords, Trophy, Crown, Users, ArrowRight, CheckCircle } from 'lucide-react';
-import { knockoutMatches, getQualifiedPlayers, generateSemiFinals, generateFinalMatch } from '../data/matches';
+import { knockoutMatches, generateSemiFinals, generateFinalMatch, isGroupStageComplete } from '../data/matches';
 import { useTournamentData } from '../hooks/useTournamentData';
 
 function getTopPlayers(leaderboardData) {
@@ -66,16 +66,23 @@ export default function KnockoutPage() {
   const { getGroupLeaderboard } = useTournamentData();
   const sortedA = getGroupLeaderboard('A');
   const sortedB = getGroupLeaderboard('B');
+  const groupStageComplete = isGroupStageComplete();
   
   const topA = getTopPlayers(sortedA);
   const topB = getTopPlayers(sortedB);
 
-  // Auto-generate knockout matches based on qualified players
-  const semiFinalMatches = topA.length >= 2 && topB.length >= 2 
+  // Auto-generate knockout matches only after group stage is complete
+  const semiFinalMatches = groupStageComplete && topA.length >= 2 && topB.length >= 2 
     ? generateSemiFinals(topA, topB) 
     : knockoutMatches.semiFinals;
-    
-  const finalMatch = knockoutMatches.final;
+
+  const semiWinners = semiFinalMatches
+    .filter((match) => match.winner)
+    .map((match) => match.winner);
+
+  const finalMatch = semiWinners.length >= 2
+    ? generateFinalMatch(semiWinners[0], semiWinners[1])
+    : knockoutMatches.final;
 
   return (
     <motion.div
@@ -90,6 +97,11 @@ export default function KnockoutPage() {
           Knockout Stage
         </h1>
         <p className="ui-subtitle">Semi Finals → Grand Final</p>
+        <p className="mt-2 text-sm text-gray-500">
+          {groupStageComplete
+            ? 'Bracket auto-generated from current tournament leaderboard.'
+            : 'Complete group stage matches to auto-generate the knockout bracket.'}
+        </p>
       </div>
 
       <div className="ui-grid ui-grid-2">
