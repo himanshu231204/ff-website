@@ -20,6 +20,42 @@ export default function LeaderboardTable({ players }) {
     return data;
   }, [players, sortConfig]);
 
+  const qualificationRankMap = useMemo(() => {
+    const groupRankMap = new Map();
+
+    ['A', 'B'].forEach((group) => {
+      const groupPlayers = sortedData.filter((player) => player.group === group);
+      groupPlayers.forEach((player, index) => {
+        groupRankMap.set(player.id, index + 1);
+      });
+    });
+
+    return groupRankMap;
+  }, [sortedData]);
+
+  const getQualificationBadge = (player) => {
+    const groupRank = qualificationRankMap.get(player.id) || null;
+
+    if (!groupRank) {
+      return {
+        label: 'Pending',
+        className: 'bg-yellow-500/15 text-yellow-300 border border-yellow-500/30',
+      };
+    }
+
+    if (groupRank <= 4) {
+      return {
+        label: 'Qualified',
+        className: 'bg-green-500/15 text-green-400 border border-green-500/30',
+      };
+    }
+
+    return {
+      label: 'Not Qualified',
+      className: 'bg-red-500/15 text-red-400 border border-red-500/30',
+    };
+  };
+
   const handleSort = (key) => {
     setSortConfig((prev) => ({
       key,
@@ -48,7 +84,7 @@ export default function LeaderboardTable({ players }) {
 
   return (
     <div className="ui-card overflow-hidden p-0">
-      <div className="hidden md:grid md:grid-cols-8 gap-4 px-5 py-4 bg-white/5 border-b border-white/10">
+      <div className="hidden md:grid md:grid-cols-9 gap-4 px-5 py-4 bg-white/5 border-b border-white/10">
         <div className="text-left text-gray-400 font-semibold text-sm">Rank</div>
         <button onClick={() => handleSort('name')} className="text-left col-span-2 text-gray-400 font-semibold text-sm hover:text-white transition-colors">
           Player<SortIcon column="name" />
@@ -68,6 +104,7 @@ export default function LeaderboardTable({ players }) {
         <button onClick={() => handleSort('nkr')} className="text-right text-blue-400 font-semibold text-sm hover:text-white transition-colors">
           NKR<SortIcon column="nkr" />
         </button>
+        <div className="text-right text-gray-400 font-semibold text-sm">Status</div>
       </div>
 
       <div className="divide-y divide-white/5">
@@ -81,7 +118,7 @@ export default function LeaderboardTable({ players }) {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.3, delay: idx * 0.04 }}
-                className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-8 gap-3 px-5 py-4 hover:bg-white/10 transition-all duration-300 ${
+                className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-9 gap-3 px-5 py-4 hover:bg-white/10 transition-all duration-300 ${
                   rank <= 3 ? 'bg-gradient-to-r from-white/5 to-transparent' : ''
                 }`}
               >
@@ -106,6 +143,17 @@ export default function LeaderboardTable({ players }) {
                 <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">Losses: </span><span className="text-red-400 font-medium">{player.losses}</span></div>
                 <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">Points: </span><span className="text-cyan-300 font-semibold">{player.points}</span></div>
                 <div className="text-right md:text-center"><span className="md:hidden text-gray-400 text-sm">NKR: </span><span className="text-blue-400 font-semibold">{player.nkr}</span></div>
+                <div className="text-right md:text-center">
+                  <span className="md:hidden text-gray-400 text-sm">Status: </span>
+                  {(() => {
+                    const status = getQualificationBadge(player);
+                    return (
+                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${status.className}`}>
+                        {status.label}
+                      </span>
+                    );
+                  })()}
+                </div>
               </motion.div>
             );
           })}

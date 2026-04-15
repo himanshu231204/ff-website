@@ -3,6 +3,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Crown, Gamepad2, Medal, Target, Trophy, Users } from 'lucide-react';
 import { useTournamentData } from '../hooks/useTournamentData';
+import { isGroupStageComplete } from '../data/matches';
 
 function StatCard({ label, value, helper, accent }) {
   return (
@@ -52,7 +53,7 @@ function MatchRow({ match, playerName }) {
 
 export default function PlayerProfilePage() {
   const { playerId } = useParams();
-  const { players, matches, leaderboard } = useTournamentData();
+  const { players, matches, leaderboard, getGroupLeaderboard } = useTournamentData();
 
   const player = useMemo(() => players.find((item) => String(item.id) === String(playerId)), [players, playerId]);
 
@@ -70,6 +71,14 @@ export default function PlayerProfilePage() {
     const points = wins * 2;
     const rank = leaderboard.findIndex((item) => item.id === player.id) + 1;
     const nkr = Number(((player.stats?.totalScoreDifference || 0) / 10).toFixed(2));
+    const groupStageComplete = isGroupStageComplete();
+    const groupLeaderboard = getGroupLeaderboard(player.group);
+    const groupRank = groupLeaderboard.findIndex((item) => item.id === player.id) + 1;
+    const qualificationStatus = !groupStageComplete
+      ? { label: 'Qualification Pending', className: 'bg-yellow-500/15 text-yellow-300 border border-yellow-500/30' }
+      : groupRank > 0 && groupRank <= 4
+        ? { label: 'Qualified for Knockout', className: 'bg-green-500/15 text-green-400 border border-green-500/30' }
+        : { label: 'Not Qualified', className: 'bg-red-500/15 text-red-400 border border-red-500/30' };
 
     return {
       playerMatches,
@@ -80,8 +89,10 @@ export default function PlayerProfilePage() {
       points,
       rank: rank > 0 ? rank : null,
       nkr,
+      qualificationStatus,
+      groupRank: groupRank > 0 ? groupRank : null,
     };
-  }, [player, matches, leaderboard]);
+  }, [player, matches, leaderboard, getGroupLeaderboard]);
 
   if (!player) {
     return <Navigate to="/players" replace />;
@@ -163,6 +174,18 @@ export default function PlayerProfilePage() {
           </div>
           <p className="mt-3 text-lg font-semibold text-white">{playerProfile.wins > playerProfile.losses ? 'Winning Form' : 'Needs Improvement'}</p>
           <p className="mt-2 text-sm text-gray-500">Based on current tournament performance</p>
+        </div>
+        <div className="ui-card">
+          <div className="flex items-center gap-2">
+            <Crown className="text-yellow-400" size={18} />
+            <h2 className="font-semibold text-white">Qualification</h2>
+          </div>
+          <p className={`mt-3 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${playerProfile.qualificationStatus.className}`}>
+            {playerProfile.qualificationStatus.label}
+          </p>
+          <p className="mt-2 text-sm text-gray-500">
+            Group rank: {playerProfile.groupRank ? `#${playerProfile.groupRank}` : '-'}
+          </p>
         </div>
       </section>
 
