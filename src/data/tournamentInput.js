@@ -4,6 +4,8 @@
 // Fill winner/kills and schedule status controls here.
 // This file is the single source for tournament input data.
 
+import { tr } from "framer-motion/client";
+
 export const playersInput = [
   { id: 1, name: 'Priyanshu', level: 75, group: 'A', matches: 4, wins: 3, kills: 14 },
   { id: 2, name: 'Sunny', level: 70, group: 'A', matches: 4, wins: 2, kills: 12 },
@@ -131,7 +133,7 @@ export const matchResultsInput = {
 // false/null => Pending
 export const scheduleStatusInput = {
   groupA: [
-    { id: 1, allowStart: null },
+    { id: 1, allowStart: true },
     { id: 2, allowStart: null },
     { id: 3, allowStart: null },
     { id: 4, allowStart: null },
