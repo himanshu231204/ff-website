@@ -4,6 +4,8 @@
 // Fill winner/kills and schedule status controls here.
 // This file is the single source for match result data input.
 
+import { tr } from "framer-motion/client";
+
 export const matchResultsInput = {
   groupA: [
     { id: 1, winner: null, kills: { Priyanshu: 0, Sunny: 0 } },
@@ -54,7 +56,7 @@ export const scheduleStatusInput = {
     { id: 4, allowStart: null },
     { id: 5, allowStart: null },
     { id: 6, allowStart: null },
-    { id: 7, allowStart: null },
+    { id: 7, allowStart: true },
     { id: 8, allowStart: null },
     { id: 9, allowStart: null },
     { id: 10, allowStart: null },
