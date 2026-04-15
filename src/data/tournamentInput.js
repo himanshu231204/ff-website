@@ -116,7 +116,7 @@ export const matchResultsInput = {
   ],
   groupB: [
     { id: 1, winner: null, kills: { Devratan: 0, Shubham: 0 } },
-    { id: 2, winner: null, kills: { Dev: 0, Rajnish: 0 } },
+    { id: 2, winner: 'Rajnish', kills: { Dev: 4, Rajnish: 8 } },
     { id: 3, winner: 'Chandan', kills: { Chandan: 7, Devratan: 8 } },
     { id: 4, winner: null, kills: { Shubham: 0, Dev: 0 } },
     { id: 5, winner: null, kills: { Rajnish: 0, Chandan: 0 } },
@@ -146,7 +146,7 @@ export const scheduleStatusInput = {
   ],
   groupB: [
     { id: 1, allowStart: null },
-    { id: 2, allowStart: null },
+    { id: 2, allowStart: true },
     { id: 3, allowStart: true },
     { id: 4, allowStart: null },
     { id: 5, allowStart: null },
