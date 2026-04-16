@@ -115,7 +115,7 @@ export const matchResultsInput = {
     { id: 10, winner: null, kills: { Sunny: 0, Himanshu: 0 } },
   ],
   groupB: [
-    { id: 1, winner: null, kills: { Devratan: 0, Shubham: 0 } },
+    { id: 1, winner: 'Shubham', kills: { Devratan: 4, Shubham: 6} },
     { id: 2, winner: 'Rajnish', kills: { Dev: 4, Rajnish: 8 } },
     { id: 3, winner: 'Chandan', kills: { Chandan: 7, Devratan: 8 } },
     { id: 4, winner: null, kills: { Shubham: 0, Dev: 0 } },
