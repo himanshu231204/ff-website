@@ -122,7 +122,7 @@ export const matchResultsInput = {
     { id: 5, winner: null, kills: { Rajnish: 0, Chandan: 0 } },
     { id: 6, winner: null, kills: { Devratan: 0, Dev: 0 } },
     { id: 7, winner: 'Rajnish', kills: { Shubham: 1, Rajnish: 8 } },
-    { id: 8, winner: null, kills: { Chandan: 0, Dev: 0 } },
+    { id: 8, winner: 'Dev', kills: { Chandan: 3, Dev: 8 } },
     { id: 9, winner: 'Devratan', kills: { Devratan: 8, Rajnish: 4 } },
     { id: 10, winner: null, kills: { Shubham: 0, Chandan: 0 } },
   ],
