@@ -153,7 +153,7 @@ export const scheduleStatusInput = {
     { id: 6, allowStart: null },
     { id: 7, allowStart: true },
     { id: 8, allowStart: null },
-    { id: 9, allowStart: null },
+    { id: 9, allowStart: true },
     { id: 10, allowStart: null },
   ],
 };
