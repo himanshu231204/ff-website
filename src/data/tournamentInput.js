@@ -135,7 +135,7 @@ export const scheduleStatusInput = {
   groupA: [
     { id: 1, allowStart: true },
     { id: 2, allowStart: true },
-    { id: 3, allowStart: null },
+    { id: 3, allowStart: true },
     { id: 4, allowStart: null },
     { id: 5, allowStart: true },
     { id: 6, allowStart: true },
